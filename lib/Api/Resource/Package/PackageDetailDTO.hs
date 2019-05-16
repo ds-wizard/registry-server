@@ -1,5 +1,7 @@
 module Api.Resource.Package.PackageDetailDTO where
 
+import Data.Time
+
 import Api.Resource.Organization.OrganizationSimpleDTO
 
 data PackageDetailDTO = PackageDetailDTO
@@ -8,9 +10,11 @@ data PackageDetailDTO = PackageDetailDTO
   , _packageDetailDTOOrganizationId :: String
   , _packageDetailDTOKmId :: String
   , _packageDetailDTOVersion :: String
-  , _packageDetailDTOMetamodelVersion :: Int
   , _packageDetailDTODescription :: String
+  , _packageDetailDTOReadme :: String
+  , _packageDetailDTOMetamodelVersion :: Int
   , _packageDetailDTOParentPackageId :: Maybe String
   , _packageDetailDTOVersions :: [String]
   , _packageDetailDTOOrganization :: OrganizationSimpleDTO
+  , _packageDetailDTOCreatedAt :: UTCTime
   } deriving (Show, Eq)

@@ -7,14 +7,14 @@ import Api.Resource.Event.EventDTO
 import Api.Resource.Event.EventPathDTO
 import Api.Resource.Info.InfoDTO
 import Api.Resource.KnowledgeModel.KnowledgeModelDTO
-import Api.Resource.KnowledgeModelBundle.KnowledgeModelBundleDTO
 import Api.Resource.Organization.OrganizationChangeDTO
 import Api.Resource.Organization.OrganizationCreateDTO
 import Api.Resource.Organization.OrganizationDTO
 import Api.Resource.Organization.OrganizationStateDTO
 import Api.Resource.Package.PackageDTO
+import Api.Resource.Package.PackageDetailDTO
 import Api.Resource.Package.PackageSimpleDTO
-import Api.Resource.Package.PackageWithEventsDTO
+import Api.Resource.PackageBundle.PackageBundleDTO
 import Model.ActionKey.ActionKey
 import Model.Config.AppConfig
 import Model.Config.BuildInfoConfig
@@ -31,9 +31,10 @@ import Model.Event.Question.QuestionEvent
 import Model.Event.Reference.ReferenceEvent
 import Model.Event.Tag.TagEvent
 import Model.KnowledgeModel.KnowledgeModel
-import Model.KnowledgeModelBundle.KnowledgeModelBundle
 import Model.Organization.Organization
 import Model.Package.Package
+import Model.Package.PackageWithEvents
+import Model.PackageBundle.PackageBundle
 
 -- -------------------------------------
 -- Model
@@ -173,9 +174,6 @@ makeFields ''Tag
 
 makeFields ''Integration
 
--- Model / KnowledgeModelBundle
-makeFields ''KnowledgeModelBundle
-
 -- Model / Organization
 makeFields ''Organization
 
@@ -183,6 +181,9 @@ makeFields ''Organization
 makeFields ''Package
 
 makeFields ''PackageWithEvents
+
+-- Model / PackageBundle
+makeFields ''PackageBundle
 
 -- -------------------------------------
 -- Api / Resource
@@ -305,9 +306,6 @@ makeFields ''TagDTO
 
 makeFields ''IntegrationDTO
 
--- Api / Resource / KnowledgeModelBundle
-makeFields ''KnowledgeModelBundleDTO
-
 -- Api / Resource / Organization
 makeFields ''OrganizationDTO
 
@@ -322,4 +320,7 @@ makeFields ''PackageDTO
 
 makeFields ''PackageSimpleDTO
 
-makeFields ''PackageWithEventsDTO
+makeFields ''PackageDetailDTO
+
+-- Api / Resource / PackageBundle
+makeFields ''PackageBundleDTO

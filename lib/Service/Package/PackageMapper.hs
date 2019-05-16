@@ -1,136 +1,96 @@
 module Service.Package.PackageMapper where
 
 import Control.Lens ((^.))
+import Data.Time
 
-import Api.Resource.Organization.OrganizationDTO
 import Api.Resource.Package.PackageDTO
 import Api.Resource.Package.PackageDetailDTO
 import Api.Resource.Package.PackageSimpleDTO
-import Api.Resource.Package.PackageWithEventsDTO
 import LensesConfig
 import Model.Event.Event
+import Model.Organization.Organization
 import Model.Package.Package
+import Model.Package.PackageWithEvents
 import Service.Event.EventMapper
-import Service.Organization.OrganizationMapper
+import qualified Service.Organization.OrganizationMapper as OM
 
-packageToDTO :: Package -> PackageDTO
-packageToDTO package =
+toPackage :: PackageWithEvents -> Package
+toPackage pkg =
+  Package
+  { _packagePId = pkg ^. pId
+  , _packageName = pkg ^. name
+  , _packageOrganizationId = pkg ^. organizationId
+  , _packageKmId = pkg ^. kmId
+  , _packageVersion = pkg ^. version
+  , _packageMetamodelVersion = pkg ^. metamodelVersion
+  , _packageDescription = pkg ^. description
+  , _packageReadme = pkg ^. readme
+  , _packageParentPackageId = pkg ^. parentPackageId
+  , _packageCreatedAt = pkg ^. createdAt
+  }
+
+toDTO :: PackageWithEvents -> PackageDTO
+toDTO pkg =
   PackageDTO
-  { _packageDTOPId = package ^. pId
-  , _packageDTOName = package ^. name
-  , _packageDTOOrganizationId = package ^. organizationId
-  , _packageDTOKmId = package ^. kmId
-  , _packageDTOVersion = package ^. version
-  , _packageDTOMetamodelVersion = package ^. metamodelVersion
-  , _packageDTODescription = package ^. description
-  , _packageDTOParentPackageId = package ^. parentPackageId
+  { _packageDTOPId = pkg ^. pId
+  , _packageDTOName = pkg ^. name
+  , _packageDTOOrganizationId = pkg ^. organizationId
+  , _packageDTOKmId = pkg ^. kmId
+  , _packageDTOVersion = pkg ^. version
+  , _packageDTOMetamodelVersion = pkg ^. metamodelVersion
+  , _packageDTODescription = pkg ^. description
+  , _packageDTOReadme = pkg ^. readme
+  , _packageDTOParentPackageId = pkg ^. parentPackageId
+  , _packageDTOEvents = toDTOs (pkg ^. events)
+  , _packageDTOCreatedAt = pkg ^. createdAt
   }
 
-packageToSimpleDTO :: Package -> PackageSimpleDTO
-packageToSimpleDTO package =
+toSimpleDTO :: Package -> Organization -> PackageSimpleDTO
+toSimpleDTO pkg org =
   PackageSimpleDTO
-  { _packageSimpleDTOName = package ^. name
-  , _packageSimpleDTOOrganizationId = package ^. organizationId
-  , _packageSimpleDTOKmId = package ^. kmId
-  , _packageSimpleDTOLatestVersion = package ^. version
+  { _packageSimpleDTOPId = pkg ^. pId
+  , _packageSimpleDTOName = pkg ^. name
+  , _packageSimpleDTOOrganizationId = pkg ^. organizationId
+  , _packageSimpleDTOKmId = pkg ^. kmId
+  , _packageSimpleDTOVersion = pkg ^. version
+  , _packageSimpleDTODescription = pkg ^. description
+  , _packageSimpleDTOCreatedAt = pkg ^. createdAt
+  , _packageSimpleDTOOrganization = OM.toSimpleDTO org
   }
 
-packageToDetailDTO :: Package -> [String] -> OrganizationDTO -> PackageDetailDTO
-packageToDetailDTO package versions organization =
+toDetailDTO :: Package -> [String] -> Organization -> PackageDetailDTO
+toDetailDTO pkg versions org =
   PackageDetailDTO
-  { _packageDetailDTOPId = package ^. pId
-  , _packageDetailDTOName = package ^. name
-  , _packageDetailDTOOrganizationId = package ^. organizationId
-  , _packageDetailDTOKmId = package ^. kmId
-  , _packageDetailDTOVersion = package ^. version
-  , _packageDetailDTOMetamodelVersion = package ^. metamodelVersion
-  , _packageDetailDTODescription = package ^. description
-  , _packageDetailDTOParentPackageId = package ^. parentPackageId
+  { _packageDetailDTOPId = pkg ^. pId
+  , _packageDetailDTOName = pkg ^. name
+  , _packageDetailDTOOrganizationId = pkg ^. organizationId
+  , _packageDetailDTOKmId = pkg ^. kmId
+  , _packageDetailDTOVersion = pkg ^. version
+  , _packageDetailDTODescription = pkg ^. description
+  , _packageDetailDTOReadme = pkg ^. readme
+  , _packageDetailDTOMetamodelVersion = pkg ^. metamodelVersion
+  , _packageDetailDTOParentPackageId = pkg ^. parentPackageId
   , _packageDetailDTOVersions = versions
-  , _packageDetailDTOOrganization = organizationDTOtoSimpleDTO organization
-  }
-
-packageWithEventsToDTO :: PackageWithEvents -> PackageDTO
-packageWithEventsToDTO package =
-  PackageDTO
-  { _packageDTOPId = package ^. pId
-  , _packageDTOName = package ^. name
-  , _packageDTOOrganizationId = package ^. organizationId
-  , _packageDTOKmId = package ^. kmId
-  , _packageDTOVersion = package ^. version
-  , _packageDTOMetamodelVersion = package ^. metamodelVersion
-  , _packageDTODescription = package ^. description
-  , _packageDTOParentPackageId = package ^. parentPackageId
-  }
-
-packageWithEventsToSimpleDTO :: PackageWithEvents -> PackageSimpleDTO
-packageWithEventsToSimpleDTO package =
-  PackageSimpleDTO
-  { _packageSimpleDTOName = package ^. name
-  , _packageSimpleDTOOrganizationId = package ^. organizationId
-  , _packageSimpleDTOKmId = package ^. kmId
-  , _packageSimpleDTOLatestVersion = package ^. version
-  }
-
-packageWithEventsToDTOWithEvents :: PackageWithEvents -> PackageWithEventsDTO
-packageWithEventsToDTOWithEvents package =
-  PackageWithEventsDTO
-  { _packageWithEventsDTOPId = package ^. pId
-  , _packageWithEventsDTOName = package ^. name
-  , _packageWithEventsDTOOrganizationId = package ^. organizationId
-  , _packageWithEventsDTOKmId = package ^. kmId
-  , _packageWithEventsDTOVersion = package ^. version
-  , _packageWithEventsDTOMetamodelVersion = package ^. metamodelVersion
-  , _packageWithEventsDTODescription = package ^. description
-  , _packageWithEventsDTOParentPackageId = package ^. parentPackageId
-  , _packageWithEventsDTOEvents = toDTOs (package ^. events)
-  }
-
-packageWithEventsToPackage :: PackageWithEvents -> Package
-packageWithEventsToPackage package =
-  Package
-  { _packagePId = package ^. pId
-  , _packageName = package ^. name
-  , _packageOrganizationId = package ^. organizationId
-  , _packageKmId = package ^. kmId
-  , _packageVersion = package ^. version
-  , _packageMetamodelVersion = package ^. metamodelVersion
-  , _packageDescription = package ^. description
-  , _packageParentPackageId = package ^. parentPackageId
-  }
-
-fromDTO :: PackageDTO -> Package
-fromDTO dto =
-  Package
-  { _packagePId = dto ^. pId
-  , _packageName = dto ^. name
-  , _packageOrganizationId = dto ^. organizationId
-  , _packageKmId = dto ^. kmId
-  , _packageVersion = dto ^. version
-  , _packageMetamodelVersion = dto ^. metamodelVersion
-  , _packageDescription = dto ^. description
-  , _packageParentPackageId = dto ^. parentPackageId
-  }
-
-fromDTOWithEvents :: PackageWithEventsDTO -> PackageWithEvents
-fromDTOWithEvents dto =
-  PackageWithEvents
-  { _packageWithEventsPId = dto ^. pId
-  , _packageWithEventsName = dto ^. name
-  , _packageWithEventsOrganizationId = dto ^. organizationId
-  , _packageWithEventsKmId = dto ^. kmId
-  , _packageWithEventsVersion = dto ^. version
-  , _packageWithEventsMetamodelVersion = dto ^. metamodelVersion
-  , _packageWithEventsDescription = dto ^. description
-  , _packageWithEventsParentPackageId = dto ^. parentPackageId
-  , _packageWithEventsEvents = fromDTOs (dto ^. events)
+  , _packageDetailDTOOrganization = OM.toSimpleDTO org
+  , _packageDetailDTOCreatedAt = pkg ^. createdAt
   }
 
 buildPackageId :: String -> String -> String -> String
 buildPackageId pkgOrganizationId pkgKmId pkgVersion = pkgOrganizationId ++ ":" ++ pkgKmId ++ ":" ++ pkgVersion
 
-buildPackage :: String -> String -> String -> String -> Int -> String -> Maybe String -> [Event] -> PackageWithEvents
-buildPackage pkgName pkgOrganizationId pkgKmId pkgVersion pkgMetamodelVersion pkgDescription pkgMaybeParentPackageId pkgEvents =
+buildPackage ::
+     String
+  -> String
+  -> String
+  -> String
+  -> Int
+  -> String
+  -> String
+  -> Maybe String
+  -> [Event]
+  -> UTCTime
+  -> PackageWithEvents
+buildPackage pkgName pkgOrganizationId pkgKmId pkgVersion pkgMetamodelVersion pkgDescription pkgReadme pkgMaybeParentPackageId pkgEvents now =
   PackageWithEvents
   { _packageWithEventsPId = buildPackageId pkgOrganizationId pkgKmId pkgVersion
   , _packageWithEventsName = pkgName
@@ -139,6 +99,8 @@ buildPackage pkgName pkgOrganizationId pkgKmId pkgVersion pkgMetamodelVersion pk
   , _packageWithEventsVersion = pkgVersion
   , _packageWithEventsMetamodelVersion = pkgMetamodelVersion
   , _packageWithEventsDescription = pkgDescription
+  , _packageWithEventsReadme = pkgReadme
   , _packageWithEventsParentPackageId = pkgMaybeParentPackageId
   , _packageWithEventsEvents = pkgEvents
+  , _packageWithEventsCreatedAt = now
   }

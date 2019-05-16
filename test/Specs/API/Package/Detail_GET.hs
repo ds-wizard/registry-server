@@ -17,7 +17,6 @@ import Database.Migration.Development.Organization.Data.Organizations
 import Database.Migration.Development.Package.Data.Packages
 import LensesConfig
 import Model.Context.AppContext
-import Service.Organization.OrganizationMapper
 import Service.Package.PackageMapper
 
 import Specs.API.Common
@@ -29,7 +28,6 @@ detail_get :: AppContext -> SpecWith Application
 detail_get appContext =
   describe "GET /packages/{pkgId}" $ do
     test_200 appContext
-    test_401 appContext
     test_404 appContext
 
 -- ----------------------------------------------------
@@ -39,7 +37,7 @@ reqMethod = methodGet
 
 reqUrl = BS.pack $ "/packages/" ++ (netherlandsPackageV2 ^. pId)
 
-reqHeaders = [reqAdminAuthHeader, reqCtHeader]
+reqHeaders = [reqCtHeader]
 
 reqBody = ""
 
@@ -52,8 +50,7 @@ test_200 appContext = do
    do
     let expStatus = 200
     let expHeaders = [resCtHeader] ++ resCorsHeaders
-    let expDto =
-          packageToDetailDTO (packageWithEventsToPackage netherlandsPackageV2) ["1.0.0", "2.0.0"] (toDTO orgNetherlands)
+    let expDto = toDetailDTO (toPackage netherlandsPackageV2) ["1.0.0", "2.0.0"] orgNetherlands
     let expBody = encode expDto
      -- WHEN: Call API
     response <- request reqMethod reqUrl reqHeaders reqBody
@@ -61,11 +58,6 @@ test_200 appContext = do
     let responseMatcher =
           ResponseMatcher {matchHeaders = expHeaders, matchStatus = expStatus, matchBody = bodyEquals expBody}
     response `shouldRespondWith` responseMatcher
-
--- ----------------------------------------------------
--- ----------------------------------------------------
--- ----------------------------------------------------
-test_401 appContext = createAuthTest reqMethod reqUrl [] reqBody
 
 -- ----------------------------------------------------
 -- ----------------------------------------------------

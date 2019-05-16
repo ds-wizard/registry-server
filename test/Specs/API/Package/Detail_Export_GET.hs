@@ -13,11 +13,11 @@ import Test.Hspec.Wai.Matcher
 
 import Api.Resource.Error.ErrorDTO ()
 import Api.Resource.Package.PackageDetailJM ()
-import Database.Migration.Development.KnowledgeModelBundle.Data.KnowledgeModelBundles
 import Database.Migration.Development.Package.Data.Packages
+import Database.Migration.Development.PackageBundle.Data.PackageBundles
 import LensesConfig
 import Model.Context.AppContext
-import Service.KnowledgeModelBundle.KnowledgeModelBundleMapper
+import Service.PackageBundle.PackageBundleMapper
 
 import Specs.API.Common
 
@@ -51,7 +51,7 @@ test_200 appContext = do
    do
     let expStatus = 200
     let expHeaders = [resCtHeader] ++ resCorsHeaders
-    let expDto = toDTO netherlandsPackageV2KMBudle
+    let expDto = toDTO netherlandsPackageV2Budle
     let expBody = encode expDto
      -- WHEN: Call API
     response <- request reqMethod reqUrl reqHeaders reqBody

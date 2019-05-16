@@ -10,6 +10,7 @@ import Database.BSON.Package.PackageWithEvents ()
 import Database.DAO.Common
 import Model.Context.AppContext
 import Model.Package.Package
+import Model.Package.PackageWithEvents
 import Util.Helper (createHeeHelper, createHemHelper)
 
 entityName = "package"

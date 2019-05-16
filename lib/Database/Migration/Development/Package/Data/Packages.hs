@@ -1,27 +1,40 @@
 module Database.Migration.Development.Package.Data.Packages where
 
 import Control.Lens ((^.))
+import Data.Maybe (fromJust)
+import Data.Time
 
 import Constant.KnowledgeModel
 import Database.Migration.Development.Event.Data.Events
 import LensesConfig
 import Model.Event.Event
-import Model.Package.Package
+import Model.Package.PackageWithEvents
 import Service.Package.PackageMapper
 
 globalPackageEmpty :: PackageWithEvents
 globalPackageEmpty =
-  buildPackage "DSW Global Knowledge Model" "dsw.global" "core" "0.0.1" kmMetamodelVersion "Empty package" Nothing []
+  buildPackage
+    "DSW Global Knowledge Model"
+    "dsw"
+    "core"
+    "0.0.1"
+    kmMetamodelVersion
+    "Empty package"
+    "# DSW Global Knowledge Model"
+    Nothing
+    []
+    (UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0)
 
 globalPackage :: PackageWithEvents
 globalPackage =
   buildPackage
     "DSW Global Knowledge Model"
-    "dsw.global"
+    "dsw"
     "core"
     "1.0.0"
     kmMetamodelVersion
     "First Release"
+    "# DSW Global Knowledge Model"
     Nothing
     [ AddKnowledgeModelEvent' a_km1
     , AddTagEvent' a_km1_tds
@@ -29,6 +42,7 @@ globalPackage =
     , AddIntegrationEvent' a_km1_iop
     , AddIntegrationEvent' a_km1_ibp
     ]
+    (UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0)
 
 netherlandsPackage :: PackageWithEvents
 netherlandsPackage =
@@ -39,8 +53,10 @@ netherlandsPackage =
     "1.0.0"
     kmMetamodelVersion
     "First Release"
+    "# DSW Netherlands Knowledge Model"
     (Just $ globalPackage ^. pId)
     [AddChapterEvent' a_km1_ch1]
+    (UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0)
 
 netherlandsPackageV2 :: PackageWithEvents
 netherlandsPackageV2 =
@@ -51,8 +67,10 @@ netherlandsPackageV2 =
     "2.0.0"
     kmMetamodelVersion
     "Second Release"
+    "# DSW Netherlands Knowledge Model"
     (Just $ netherlandsPackage ^. pId)
     [AddChapterEvent' a_km1_ch4]
+    (UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0)
 
 amsterdamPackage :: PackageWithEvents
 amsterdamPackage =
@@ -63,8 +81,10 @@ amsterdamPackage =
     "1.0.0"
     kmMetamodelVersion
     "First Release"
+    "# DSW Amsterdam Knowledge Model"
     (Just $ netherlandsPackage ^. pId)
     []
+    (UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0)
 
 germanyPackage :: PackageWithEvents
 germanyPackage =
@@ -75,6 +95,7 @@ germanyPackage =
     "1.0.0"
     kmMetamodelVersion
     "First Release"
+    "# DSW Germany"
     (Just $ globalPackageEmpty ^. pId)
     [ AddKnowledgeModelEvent' a_km1
     , AddTagEvent' a_km1_tds
@@ -119,3 +140,4 @@ germanyPackage =
     , AddQuestionEvent' a_km1_ch3_q9'
     , AddQuestionEvent' a_km1_ch3_q10'
     ]
+    (UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0)

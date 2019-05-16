@@ -6,56 +6,42 @@ module Service.Package.PackageService
   , heGetSeriesOfPackages
   ) where
 
-import Control.Lens ((&), (.~), (^.))
+import Control.Lens ((^.))
 import Data.List
-import Data.Maybe
 import Data.Text (Text)
 
 import Api.Resource.Package.PackageDetailDTO
 import Api.Resource.Package.PackageSimpleDTO
+import Database.DAO.Organization.OrganizationDAO
 import Database.DAO.Package.PackageDAO
 import LensesConfig
 import Model.Context.AppContext
 import Model.Error.Error
 import Model.Package.Package
-import Service.Organization.OrganizationService
+import Model.Package.PackageWithEvents
 import Service.Package.PackageMapper
-import Service.Package.PackageValidation
 import Util.Helper (createHeeHelper)
+import Util.List (foldEithersInContext)
 
 getSimplePackagesFiltered :: [(Text, Text)] -> AppContextM (Either AppError [PackageSimpleDTO])
-getSimplePackagesFiltered queryParams = do
-  heFindPackagesFiltered queryParams $ \packages -> do
-    let uniquePackages = foldl addIfUnique [] packages
-    return . Right $ uniquePackages
+getSimplePackagesFiltered queryParams =
+  heFindPackagesFiltered queryParams $ \pkgs ->
+    foldEithersInContext . mapToSimpleDTO . chooseTheNewest . groupPkgs $ pkgs
   where
-    addIfUnique :: [PackageSimpleDTO] -> Package -> [PackageSimpleDTO]
-    addIfUnique packageDtos newPackage =
-      case isAlreadyInArray packageDtos newPackage of
-        (Just packageDto) ->
-          let withoutDesiredPackage = delete packageDto packageDtos
-              updatedPackageDto = computeLatestVersion packageDto newPackage
-          in withoutDesiredPackage ++ [updatedPackageDto]
-        Nothing -> packageDtos ++ [packageToSimpleDTO newPackage]
-    isAlreadyInArray :: [PackageSimpleDTO] -> Package -> Maybe PackageSimpleDTO
-    isAlreadyInArray packageDtos newPackage =
-      find
-        (\pkg -> (newPackage ^. kmId) == (pkg ^. kmId) && (newPackage ^. organizationId) == (pkg ^. organizationId))
-        packageDtos
-    computeLatestVersion :: PackageSimpleDTO -> Package -> PackageSimpleDTO
-    computeLatestVersion packageDto newPackage =
-      let originalVersion = packageDto ^. latestVersion
-          newVersion = newPackage ^. version
-      in if isNothing $ validateIsVersionHigher newVersion originalVersion
-           then packageDto & latestVersion .~ newVersion
-           else packageDto
+    groupPkgs :: [Package] -> [[Package]]
+    groupPkgs = groupBy (\p1 p2 -> (p1 ^. organizationId) == (p2 ^. organizationId) && (p1 ^. kmId) == (p2 ^. kmId))
+    chooseTheNewest :: [[Package]] -> [Package]
+    chooseTheNewest = fmap (maximumBy (\p1 p2 -> compare (p1 ^. version) (p2 ^. version)))
+    mapToSimpleDTO :: [Package] -> [AppContextM (Either AppError PackageSimpleDTO)]
+    mapToSimpleDTO =
+      fmap (\pkg -> heFindOrganizationByOrgId (pkg ^. organizationId) $ \org -> return . Right $ toSimpleDTO pkg org)
 
 getPackageById :: String -> AppContextM (Either AppError PackageDetailDTO)
 getPackageById pkgId =
   heFindPackageById pkgId $ \pkg ->
     heFindPackagesByOrganizationIdAndKmId (pkg ^. organizationId) (pkg ^. kmId) $ \allPkgs ->
-      heGetOrganizationByOrgId (pkg ^. organizationId) $ \org ->
-        return . Right $ packageToDetailDTO pkg (_packageVersion <$> allPkgs) org
+      heFindOrganizationByOrgId (pkg ^. organizationId) $ \org ->
+        return . Right $ toDetailDTO pkg (_packageVersion <$> allPkgs) org
 
 getSeriesOfPackages :: String -> AppContextM (Either AppError [PackageWithEvents])
 getSeriesOfPackages pkgId =

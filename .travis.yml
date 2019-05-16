@@ -11,7 +11,7 @@ stages:
 
 env:
   - PRIVATE_IMAGE="$REGISTRY/registry-server" \
-    IMAGE=PRIVATE_IMAGE
+    IMAGE="$REGISTRY/registry-server" \
     IMAGE_TAG="$PRIVATE_IMAGE:$TRAVIS_COMMIT" \
     IMAGE_TAG_DEVELOP="$IMAGE:develop" \
     IMAGE_TAG_LATEST="$IMAGE:latest"
@@ -82,7 +82,7 @@ jobs:
       install: false
       env:
         - PRIVATE_IMAGE="$REGISTRY/registry-server"
-        - IMAGE=PRIVATE_IMAGE
+        - IMAGE="$REGISTRY/registry-server"
         - IMAGE_TAG="$PRIVATE_IMAGE:$TRAVIS_COMMIT"
         - IMAGE_TAG_MAJOR="$IMAGE:"`echo $TRAVIS_TAG | sed -E "s/v(.*)\..*\..*/\1/g"`
         - IMAGE_TAG_MINOR="$IMAGE:"`echo $TRAVIS_TAG | sed -E "s/v(.*)\..*/\1/g"`
@@ -101,7 +101,7 @@ jobs:
       install: false
       env:
         - PRIVATE_IMAGE="$REGISTRY/registry-server"
-        - IMAGE=PRIVATE_IMAGE
+        - IMAGE="$REGISTRY/registry-server"
         - IMAGE_TAG="$PRIVATE_IMAGE:$TRAVIS_COMMIT"
         - IMAGE_TAG_RC="$IMAGE:"`echo $TRAVIS_TAG | sed -E "s/v//g"`
       script:

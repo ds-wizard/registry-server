@@ -10,6 +10,7 @@ import Test.Hspec.Wai hiding (shouldRespondWith)
 import Test.Hspec.Wai.Matcher
 
 import Api.Resource.Error.ErrorDTO ()
+import Database.Migration.Development.Organization.Data.Organizations
 import Database.Migration.Development.Package.Data.Packages
 import Model.Context.AppContext
 import Service.Package.PackageMapper
@@ -20,10 +21,7 @@ import Specs.API.Common
 -- GET /packages/unique
 -- ------------------------------------------------------------------------
 list_unique_get :: AppContext -> SpecWith Application
-list_unique_get appContext =
-  describe "GET /packages/unique" $ do
-    test_200 appContext
-    test_401 appContext
+list_unique_get appContext = describe "GET /packages/unique" $ do test_200 appContext
 
 -- ----------------------------------------------------
 -- ----------------------------------------------------
@@ -32,7 +30,7 @@ reqMethod = methodGet
 
 reqUrl = "/packages/unique"
 
-reqHeaders = [reqAdminAuthHeader, reqCtHeader]
+reqHeaders = [reqCtHeader]
 
 reqBody = ""
 
@@ -45,7 +43,8 @@ test_200 appContext = do
    do
     let expStatus = 200
     let expHeaders = [resCtHeader] ++ resCorsHeaders
-    let expDto = packageWithEventsToSimpleDTO <$> [globalPackage, netherlandsPackageV2]
+    let expDto =
+          [toSimpleDTO (toPackage globalPackage) orgDsw, toSimpleDTO (toPackage netherlandsPackageV2) orgNetherlands]
     let expBody = encode expDto
      -- WHEN: Call API
     response <- request reqMethod reqUrl reqHeaders reqBody
@@ -53,8 +52,3 @@ test_200 appContext = do
     let responseMatcher =
           ResponseMatcher {matchHeaders = expHeaders, matchStatus = expStatus, matchBody = bodyEquals expBody}
     response `shouldRespondWith` responseMatcher
-
--- ----------------------------------------------------
--- ----------------------------------------------------
--- ----------------------------------------------------
-test_401 appContext = createAuthTest reqMethod reqUrl [] reqBody

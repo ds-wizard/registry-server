@@ -25,6 +25,13 @@ toDTO organization =
   , _organizationDTOLastAccessAt = organization ^. lastAccessAt
   }
 
+toSimpleDTO :: Organization -> OrganizationSimpleDTO
+toSimpleDTO organization =
+  OrganizationSimpleDTO
+  { _organizationSimpleDTOOrganizationId = organization ^. organizationId
+  , _organizationSimpleDTOName = organization ^. name
+  }
+
 organizationDTOtoSimpleDTO :: OrganizationDTO -> OrganizationSimpleDTO
 organizationDTOtoSimpleDTO organization =
   OrganizationSimpleDTO

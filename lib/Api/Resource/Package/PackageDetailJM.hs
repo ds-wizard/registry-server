@@ -16,9 +16,11 @@ instance ToJSON PackageDetailDTO where
       , "version" .= _packageDetailDTOVersion
       , "metamodelVersion" .= _packageDetailDTOMetamodelVersion
       , "description" .= _packageDetailDTODescription
+      , "readme" .= _packageDetailDTOReadme
       , "parentPackageId" .= _packageDetailDTOParentPackageId
       , "versions" .= _packageDetailDTOVersions
       , "organization" .= _packageDetailDTOOrganization
+      , "createdAt" .= _packageDetailDTOCreatedAt
       ]
 
 instance FromJSON PackageDetailDTO where
@@ -30,8 +32,10 @@ instance FromJSON PackageDetailDTO where
     _packageDetailDTOVersion <- o .: "version"
     _packageDetailDTOMetamodelVersion <- o .: "metamodelVersion"
     _packageDetailDTODescription <- o .: "description"
+    _packageDetailDTOReadme <- o .: "readme"
     _packageDetailDTOParentPackageId <- o .: "parentPackageId"
     _packageDetailDTOVersions <- o .: "versions"
     _packageDetailDTOOrganization <- o .: "organization"
+    _packageDetailDTOCreatedAt <- o .: "createdAt"
     return PackageDetailDTO {..}
   parseJSON _ = mzero
