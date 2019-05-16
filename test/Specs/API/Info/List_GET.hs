@@ -40,7 +40,9 @@ test_200 appContext =
    do
     let expStatus = 200
     let expHeaders = [resCtHeader] ++ resCorsHeaders
-    let expDto = InfoDTO {_infoDTOName = "Registry Server", _infoDTOVersion = "1.0.0", _infoDTOBuiltAt = "2017/10/25 19:50:20Z"}
+    let expDto =
+          InfoDTO
+          {_infoDTOName = "Registry Server", _infoDTOVersion = "1.0.0", _infoDTOBuiltAt = "2017/10/25 19:50:20Z"}
     let expBody = encode expDto
      -- WHEN: Call API
     response <- request reqMethod reqUrl reqHeaders reqBody
