@@ -1,5 +1,5 @@
-module Specs.API.Package.Detail_Export_GET
-  ( detail_export_get
+module Specs.API.Package.Detail_Bundle_GET
+  ( detail_bundle_get
   ) where
 
 import Control.Lens ((^.))
@@ -22,11 +22,11 @@ import Service.PackageBundle.PackageBundleMapper
 import Specs.API.Common
 
 -- ------------------------------------------------------------------------
--- GET /packages/{pkgId}/export
+-- GET /packages/{pkgId}/bundle
 -- ------------------------------------------------------------------------
-detail_export_get :: AppContext -> SpecWith Application
-detail_export_get appContext =
-  describe "GET /packages/{pkgId}/export" $ do
+detail_bundle_get :: AppContext -> SpecWith Application
+detail_bundle_get appContext =
+  describe "GET /packages/{pkgId}/bundle" $ do
     test_200 appContext
     test_401 appContext
     test_404 appContext
@@ -36,7 +36,7 @@ detail_export_get appContext =
 -- ----------------------------------------------------
 reqMethod = methodGet
 
-reqUrl = BS.pack $ "/packages/" ++ (netherlandsPackageV2 ^. pId) ++ "/export"
+reqUrl = BS.pack $ "/packages/" ++ (netherlandsPackageV2 ^. pId) ++ "/bundle"
 
 reqHeaders = [reqAdminAuthHeader, reqCtHeader]
 
@@ -71,7 +71,7 @@ test_401 appContext = createAuthTest reqMethod reqUrl [] reqBody
 test_404 appContext =
   createNotFoundTest
     reqMethod
-    "/packages/dsw.global:non-existing-package:1.0.0/export"
+    "/packages/dsw.global:non-existing-package:1.0.0/bundle"
     reqHeaders
     reqBody
     "package"

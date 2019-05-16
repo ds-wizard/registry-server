@@ -66,7 +66,7 @@ createEndpoints context
    ---------------------------
   get "/packages/unique" getUniquePackagesA
   get "/packages/:pkgId" getPackageA
-  get "/packages/:pkgId/export" getPackageExportA
+  get "/packages/:pkgId/bundle" getPackageBundleA
    ---------------------------
    -- ACTION KEY
    ---------------------------

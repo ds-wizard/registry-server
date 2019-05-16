@@ -24,11 +24,11 @@ getPackageA = do
     Right resDto -> json resDto
     Left error -> sendError error
 
-getPackageExportA :: Endpoint
-getPackageExportA =
+getPackageBundleA :: Endpoint
+getPackageBundleA =
   getAuthServiceExecutor $ \runInAuthService -> do
     pkgId <- param "pkgId"
-    eitherResDto <- runInAuthService $ exportPackageBundle pkgId
+    eitherResDto <- runInAuthService $ getPackageBundle pkgId
     case eitherResDto of
       Right resDto -> json resDto
       Left error -> sendError error

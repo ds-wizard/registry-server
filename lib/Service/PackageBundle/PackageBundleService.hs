@@ -1,5 +1,5 @@
 module Service.PackageBundle.PackageBundleService
-  ( exportPackageBundle
+  ( getPackageBundle
   ) where
 
 import Control.Lens ((^.))
@@ -14,8 +14,8 @@ import Model.PackageBundle.PackageBundle
 import Service.Package.PackageService
 import Service.PackageBundle.PackageBundleMapper
 
-exportPackageBundle :: String -> AppContextM (Either AppError PackageBundleDTO)
-exportPackageBundle pbId =
+getPackageBundle :: String -> AppContextM (Either AppError PackageBundleDTO)
+getPackageBundle pbId =
   heGetSeriesOfPackages pbId $ \packages -> do
     let newestPackage = last packages
     let pb =
