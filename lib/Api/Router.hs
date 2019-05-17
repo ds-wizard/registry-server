@@ -64,7 +64,7 @@ createEndpoints context
    ---------------------------
    -- PACKAGE
    ---------------------------
-  get "/packages/unique" getUniquePackagesA
+  get "/packages" getPackagesA
   get "/packages/:pkgId" getPackageA
   get "/packages/:pkgId/bundle" getPackageBundleA
    ---------------------------

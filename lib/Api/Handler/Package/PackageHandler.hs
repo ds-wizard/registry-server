@@ -8,8 +8,8 @@ import Api.Resource.Package.PackageSimpleJM ()
 import Service.Package.PackageService
 import Service.PackageBundle.PackageBundleService
 
-getUniquePackagesA :: Endpoint
-getUniquePackagesA = do
+getPackagesA :: Endpoint
+getPackagesA = do
   queryParams <- getListOfQueryParamsIfPresent ["organizationId", "kmId"]
   eitherResDtos <- runInUnauthService $ getSimplePackagesFiltered queryParams
   case eitherResDtos of

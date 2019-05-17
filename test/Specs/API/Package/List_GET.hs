@@ -1,5 +1,5 @@
-module Specs.API.Package.List_Unique_GET
-  ( list_unique_get
+module Specs.API.Package.List_GET
+  ( list_get
   ) where
 
 import Data.Aeson (encode)
@@ -18,17 +18,17 @@ import Service.Package.PackageMapper
 import Specs.API.Common
 
 -- ------------------------------------------------------------------------
--- GET /packages/unique
+-- GET /packages
 -- ------------------------------------------------------------------------
-list_unique_get :: AppContext -> SpecWith Application
-list_unique_get appContext = describe "GET /packages/unique" $ do test_200 appContext
+list_get :: AppContext -> SpecWith Application
+list_get appContext = describe "GET /packages" $ do test_200 appContext
 
 -- ----------------------------------------------------
 -- ----------------------------------------------------
 -- ----------------------------------------------------
 reqMethod = methodGet
 
-reqUrl = "/packages/unique"
+reqUrl = "/packages"
 
 reqHeaders = [reqCtHeader]
 

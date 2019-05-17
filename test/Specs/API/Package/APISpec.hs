@@ -6,11 +6,11 @@ import Test.Hspec.Wai hiding (shouldRespondWith)
 import Specs.API.Common
 import Specs.API.Package.Detail_Bundle_GET
 import Specs.API.Package.Detail_GET
-import Specs.API.Package.List_Unique_GET
+import Specs.API.Package.List_GET
 
 packageAPI appContext =
   with (startWebApp appContext) $
   describe "PACKAGE API Spec" $ do
-    list_unique_get appContext
+    list_get appContext
     detail_get appContext
     detail_bundle_get appContext
