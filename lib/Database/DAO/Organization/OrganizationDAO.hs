@@ -1,9 +1,11 @@
 module Database.DAO.Organization.OrganizationDAO where
 
+import Control.Lens ((^.))
 import Data.Bson
 
 import Database.BSON.Organization.Organization ()
 import Database.DAO.Common
+import LensesConfig
 import Model.Context.AppContext
 import Model.Error.Error
 import Model.Organization.Organization
@@ -29,7 +31,7 @@ insertOrganization :: Organization -> AppContextM Value
 insertOrganization = createInsertFn collection
 
 updateOrganization :: Organization -> AppContextM ()
-updateOrganization = createUpdateFn collection
+updateOrganization org = createUpdateByFn collection "organizationId" (org ^. organizationId) org
 
 deleteOrganizations :: AppContextM ()
 deleteOrganizations = createDeleteEntitiesFn collection

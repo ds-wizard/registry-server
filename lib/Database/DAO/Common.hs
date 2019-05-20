@@ -57,8 +57,8 @@ createInsertFn collection entity = do
   let action = insert collection (toBSON entity)
   runDB action
 
-createUpdateFn collection entity = do
-  let action = fetch (select [] collection) >>= save collection . merge (toBSON entity)
+createUpdateByFn collection paramName paramValue entity = do
+  let action = fetch (select [paramName =: paramValue] collection) >>= save collection . merge (toBSON entity)
   runDB action
 
 createDeleteEntitiesFn collection = do
