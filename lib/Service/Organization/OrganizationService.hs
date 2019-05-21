@@ -3,6 +3,8 @@ module Service.Organization.OrganizationService where
 import Control.Lens ((&), (.~), (^.))
 import Control.Monad.Reader (asks, liftIO)
 import Data.Time
+import qualified Data.ByteString.Char8 as BS
+import Crypto.Random
 
 import Api.Resource.ActionKey.ActionKeyDTO
 import Api.Resource.Organization.OrganizationChangeDTO
@@ -23,7 +25,6 @@ import Service.Mail.Mailer
 import Service.Organization.OrganizationMapper
 import Service.Organization.OrganizationValidation
 import Util.Helper (createHeeHelper, createHemHelper)
-import Util.String (generateRandomString)
 
 getOrganizations :: AppContextM (Either AppError [OrganizationDTO])
 getOrganizations =
@@ -125,7 +126,8 @@ checkPermissionToOrganization org callback =
 -- --------------------------------
 -- PRIVATE
 -- --------------------------------
-generateNewOrgToken = liftIO $ generateRandomString 256
+generateNewOrgToken :: AppContextM String
+generateNewOrgToken = (liftIO $ getRandomBytes 256) >>= (return . BS.unpack)
 
 updateOrgTimestamp :: Organization -> AppContextM Organization
 updateOrgTimestamp user = do
