@@ -39,7 +39,7 @@ sendRegistrationConfirmationMail :: OrganizationDTO -> String -> AppContextM (Ei
 sendRegistrationConfirmationMail org hash = do
   dswConfig <- asks _appContextAppConfig
   let clientAddress = dswConfig ^. general . clientUrl
-      activationLink = clientAddress ++ "/signup-confirmation/" ++ (org ^. organizationId) ++ "/" ++ hash
+      activationLink = clientAddress ++ "/signup/" ++ (org ^. organizationId) ++ "/" ++ hash
       mailName = fromMaybe "" $ dswConfig ^. mail . name
       subject = TL.pack $ mailName ++ ": Confirmation Email"
       additionals = [("activationLink", Aeson.String $ T.pack activationLink)]
@@ -62,7 +62,7 @@ sendResetTokenMail :: OrganizationDTO -> String -> AppContextM (Either String ()
 sendResetTokenMail org hash = do
   dswConfig <- asks _appContextAppConfig
   let clientAddress = dswConfig ^. general . clientUrl
-      resetLink = clientAddress ++ "/forgotten-password/" ++ (org ^. organizationId) ++ "/" ++ hash
+      resetLink = clientAddress ++ "/forgotten-token/" ++ (org ^. organizationId) ++ "/" ++ hash
       mailName = fromMaybe "" $ dswConfig ^. mail . name
       subject = TL.pack $ mailName ++ ": Reset Password"
       additionals = [("resetLink", (Aeson.String $ T.pack resetLink))]
