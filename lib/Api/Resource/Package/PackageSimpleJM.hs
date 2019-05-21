@@ -3,8 +3,8 @@ module Api.Resource.Package.PackageSimpleJM where
 import Control.Monad
 import Data.Aeson
 
-import Api.Resource.Package.PackageSimpleDTO
 import Api.Resource.Organization.OrganizationSimpleJM ()
+import Api.Resource.Package.PackageSimpleDTO
 
 instance ToJSON PackageSimpleDTO where
   toJSON PackageSimpleDTO {..} =

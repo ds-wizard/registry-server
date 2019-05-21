@@ -1,13 +1,11 @@
 module Service.Package.PackageMapper where
 
 import Control.Lens ((^.))
-import Data.Time
 
 import Api.Resource.Package.PackageDTO
 import Api.Resource.Package.PackageDetailDTO
 import Api.Resource.Package.PackageSimpleDTO
 import LensesConfig
-import Model.Event.Event
 import Model.Organization.Organization
 import Model.Package.Package
 import Model.Package.PackageWithEvents
@@ -77,30 +75,3 @@ toDetailDTO pkg versions org =
 
 buildPackageId :: String -> String -> String -> String
 buildPackageId pkgOrganizationId pkgKmId pkgVersion = pkgOrganizationId ++ ":" ++ pkgKmId ++ ":" ++ pkgVersion
-
-buildPackage ::
-     String
-  -> String
-  -> String
-  -> String
-  -> Int
-  -> String
-  -> String
-  -> Maybe String
-  -> [Event]
-  -> UTCTime
-  -> PackageWithEvents
-buildPackage pkgName pkgOrganizationId pkgKmId pkgVersion pkgMetamodelVersion pkgDescription pkgReadme pkgMaybeParentPackageId pkgEvents now =
-  PackageWithEvents
-  { _packageWithEventsPId = buildPackageId pkgOrganizationId pkgKmId pkgVersion
-  , _packageWithEventsName = pkgName
-  , _packageWithEventsOrganizationId = pkgOrganizationId
-  , _packageWithEventsKmId = pkgKmId
-  , _packageWithEventsVersion = pkgVersion
-  , _packageWithEventsMetamodelVersion = pkgMetamodelVersion
-  , _packageWithEventsDescription = pkgDescription
-  , _packageWithEventsReadme = pkgReadme
-  , _packageWithEventsParentPackageId = pkgMaybeParentPackageId
-  , _packageWithEventsEvents = pkgEvents
-  , _packageWithEventsCreatedAt = now
-  }

@@ -39,9 +39,8 @@ getSimplePackagesFiltered queryParams =
 getPackageById :: String -> AppContextM (Either AppError PackageDetailDTO)
 getPackageById pkgId =
   heFindPackageById pkgId $ \pkg ->
-    heFindPackagesByOrganizationIdAndKmId (pkg ^. organizationId) (pkg ^. kmId) $ \allPkgs ->
-      heFindOrganizationByOrgId (pkg ^. organizationId) $ \org ->
-        return . Right $ toDetailDTO pkg (_packageVersion <$> allPkgs) org
+    heGetPackageVersions pkg $ \versions ->
+      heFindOrganizationByOrgId (pkg ^. organizationId) $ \org -> return . Right $ toDetailDTO pkg versions org
 
 getSeriesOfPackages :: String -> AppContextM (Either AppError [PackageWithEvents])
 getSeriesOfPackages pkgId =
@@ -52,6 +51,16 @@ getSeriesOfPackages pkgId =
       Nothing -> return . Right $ [package]
 
 -- --------------------------------
+-- PRIVATE
+-- --------------------------------
+getPackageVersions :: Package -> AppContextM (Either AppError [String])
+getPackageVersions pkg =
+  heFindPackagesByOrganizationIdAndKmId (pkg ^. organizationId) (pkg ^. kmId) $ \allPkgs ->
+    return . Right . fmap _packageVersion $ allPkgs
+
+-- --------------------------------
 -- HELPERS
 -- --------------------------------
 heGetSeriesOfPackages pkgId callback = createHeeHelper (getSeriesOfPackages pkgId) callback
+
+heGetPackageVersions pkg callback = createHeeHelper (getPackageVersions pkg) callback
