@@ -13,6 +13,7 @@ data OrganizationDTO = OrganizationDTO
   , _organizationDTORole :: OrganizationRole
   , _organizationDTOToken :: String
   , _organizationDTOActive :: Bool
+  , _organizationDTOLogo :: Maybe String
   , _organizationDTOCreatedAt :: UTCTime
   , _organizationDTOUpdatedAt :: UTCTime
   , _organizationDTOLastAccessAt :: UTCTime
@@ -25,4 +26,5 @@ instance Eq OrganizationDTO where
     _organizationDTODescription a == _organizationDTODescription b &&
     _organizationDTOEmail a == _organizationDTOEmail b &&
     _organizationDTORole a == _organizationDTORole b &&
-    _organizationDTOToken a == _organizationDTOToken b && _organizationDTOActive a == _organizationDTOActive b
+    _organizationDTOToken a == _organizationDTOToken b &&
+    _organizationDTOActive a == _organizationDTOActive b && _organizationDTOLogo a == _organizationDTOLogo b

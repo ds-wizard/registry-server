@@ -14,6 +14,7 @@ instance FromJSON OrganizationDTO where
     _organizationDTOEmail <- o .: "email"
     _organizationDTOToken <- o .: "token"
     _organizationDTOActive <- o .: "active"
+    _organizationDTOLogo <- o .: "logo"
     _organizationDTOCreatedAt <- o .: "createdAt"
     _organizationDTOUpdatedAt <- o .: "updatedAt"
     _organizationDTOLastAccessAt <- o .: "lastAccessAt"
@@ -33,6 +34,7 @@ instance ToJSON OrganizationDTO where
       , "role" .= serializeOrganizationRole _organizationDTORole
       , "token" .= _organizationDTOToken
       , "active" .= _organizationDTOActive
+      , "logo" .= _organizationDTOLogo
       , "createdAt" .= _organizationDTOCreatedAt
       , "updatedAt" .= _organizationDTOUpdatedAt
       , "lastAccessAt" .= _organizationDTOLastAccessAt

@@ -10,4 +10,8 @@ instance FromJSON OrganizationSimpleDTO where
 
 instance ToJSON OrganizationSimpleDTO where
   toJSON OrganizationSimpleDTO {..} =
-    object ["organizationId" .= _organizationSimpleDTOOrganizationId, "name" .= _organizationSimpleDTOName]
+    object
+      [ "organizationId" .= _organizationSimpleDTOOrganizationId
+      , "name" .= _organizationSimpleDTOName
+      , "logo" .= _organizationSimpleDTOLogo
+      ]

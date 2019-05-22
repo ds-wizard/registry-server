@@ -16,6 +16,7 @@ data Organization = Organization
   , _organizationRole :: OrganizationRole
   , _organizationToken :: String
   , _organizationActive :: Bool
+  , _organizationLogo :: Maybe String
   , _organizationCreatedAt :: UTCTime
   , _organizationUpdatedAt :: UTCTime
   , _organizationLastAccessAt :: UTCTime
@@ -28,4 +29,5 @@ instance Eq Organization where
     _organizationDescription a == _organizationDescription b &&
     _organizationEmail a == _organizationEmail b &&
     _organizationRole a == _organizationRole b &&
-    _organizationToken a == _organizationToken b && _organizationActive a == _organizationActive b
+    _organizationToken a == _organizationToken b &&
+    _organizationActive a == _organizationActive b && _organizationLogo a == _organizationLogo b

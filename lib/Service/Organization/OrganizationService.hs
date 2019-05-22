@@ -2,9 +2,9 @@ module Service.Organization.OrganizationService where
 
 import Control.Lens ((&), (.~), (^.))
 import Control.Monad.Reader (asks, liftIO)
-import Data.Time
-import qualified Data.ByteString.Char8 as BS
 import Crypto.Random
+import qualified Data.ByteString.Char8 as BS
+import Data.Time
 
 import Api.Resource.ActionKey.ActionKeyDTO
 import Api.Resource.Organization.OrganizationChangeDTO

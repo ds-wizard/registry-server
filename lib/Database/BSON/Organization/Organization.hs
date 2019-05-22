@@ -15,6 +15,7 @@ instance ToBSON Organization where
     , "role" BSON.=: serializeOrganizationRole _organizationRole
     , "token" BSON.=: _organizationToken
     , "active" BSON.=: _organizationActive
+    , "logo" BSON.=: _organizationLogo
     , "createdAt" BSON.=: _organizationCreatedAt
     , "updatedAt" BSON.=: _organizationUpdatedAt
     , "lastAccessAt" BSON.=: _organizationLastAccessAt
@@ -29,6 +30,7 @@ instance FromBSON Organization where
     _organizationRole <- deserializeOrganizationRole $ BSON.lookup "role" doc
     _organizationToken <- BSON.lookup "token" doc
     _organizationActive <- BSON.lookup "active" doc
+    _organizationLogo <- BSON.lookup "logo" doc
     _organizationCreatedAt <- BSON.lookup "createdAt" doc
     _organizationUpdatedAt <- BSON.lookup "updatedAt" doc
     _organizationLastAccessAt <- BSON.lookup "lastAccessAt" doc

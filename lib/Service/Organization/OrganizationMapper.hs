@@ -19,6 +19,7 @@ toDTO organization =
   , _organizationDTOEmail = organization ^. email
   , _organizationDTORole = organization ^. role
   , _organizationDTOToken = organization ^. token
+  , _organizationDTOLogo = organization ^. logo
   , _organizationDTOActive = organization ^. active
   , _organizationDTOCreatedAt = organization ^. createdAt
   , _organizationDTOUpdatedAt = organization ^. updatedAt
@@ -30,6 +31,7 @@ toSimpleDTO organization =
   OrganizationSimpleDTO
   { _organizationSimpleDTOOrganizationId = organization ^. organizationId
   , _organizationSimpleDTOName = organization ^. name
+  , _organizationSimpleDTOLogo = organization ^. logo
   }
 
 organizationDTOtoSimpleDTO :: OrganizationDTO -> OrganizationSimpleDTO
@@ -37,6 +39,7 @@ organizationDTOtoSimpleDTO organization =
   OrganizationSimpleDTO
   { _organizationSimpleDTOOrganizationId = organization ^. organizationId
   , _organizationSimpleDTOName = organization ^. name
+  , _organizationSimpleDTOLogo = organization ^. logo
   }
 
 fromCreateDTO :: OrganizationCreateDTO -> OrganizationRole -> String -> UTCTime -> UTCTime -> UTCTime -> Organization
@@ -49,6 +52,7 @@ fromCreateDTO dto orgRole orgToken orgCreatedAt orgUpdatedAt orgLastAccessAt =
   , _organizationRole = orgRole
   , _organizationToken = orgToken
   , _organizationActive = False
+  , _organizationLogo = Nothing
   , _organizationCreatedAt = orgCreatedAt
   , _organizationUpdatedAt = orgUpdatedAt
   , _organizationLastAccessAt = orgLastAccessAt
@@ -64,6 +68,7 @@ fromChangeDTO dto org orgUpdatedAt =
   , _organizationRole = org ^. role
   , _organizationToken = org ^. token
   , _organizationActive = org ^. active
+  , _organizationLogo = org ^. logo
   , _organizationCreatedAt = org ^. createdAt
   , _organizationUpdatedAt = orgUpdatedAt
   , _organizationLastAccessAt = org ^. lastAccessAt
