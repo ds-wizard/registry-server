@@ -9,20 +9,22 @@ import Service.Package.PackageService
 import Service.PackageBundle.PackageBundleService
 
 getPackagesA :: Endpoint
-getPackagesA = do
-  queryParams <- getListOfQueryParamsIfPresent ["organizationId", "kmId"]
-  eitherResDtos <- runInUnauthService $ getSimplePackagesFiltered queryParams
-  case eitherResDtos of
-    Right resDtos -> json resDtos
-    Left error -> sendError error
+getPackagesA =
+  getMaybeAuthServiceExecutor $ \runInMaybeAuthService -> do
+    queryParams <- getListOfQueryParamsIfPresent ["organizationId", "kmId"]
+    eitherResDtos <- runInMaybeAuthService $ getSimplePackagesFiltered queryParams
+    case eitherResDtos of
+      Right resDtos -> json resDtos
+      Left error -> sendError error
 
 getPackageA :: Endpoint
-getPackageA = do
-  pkgId <- param "pkgId"
-  eitherResDto <- runInUnauthService $ getPackageById pkgId
-  case eitherResDto of
-    Right resDto -> json resDto
-    Left error -> sendError error
+getPackageA =
+  getMaybeAuthServiceExecutor $ \runInMaybeAuthService -> do
+    pkgId <- param "pkgId"
+    eitherResDto <- runInMaybeAuthService $ getPackageById pkgId
+    case eitherResDto of
+      Right resDto -> json resDto
+      Left error -> sendError error
 
 getPackageBundleA :: Endpoint
 getPackageBundleA =

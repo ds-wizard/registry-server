@@ -9,7 +9,7 @@ import qualified Data.Text.Lazy as LT
 import qualified Data.UUID as U
 import Database.MongoDB
        ((=:), delete, deleteOne, fetch, find, findOne, insert, merge,
-        rest, save, select)
+        modify, rest, save, select)
 import Database.Persist.MongoDB (runMongoDBPoolDef)
 
 import Localization
@@ -60,6 +60,13 @@ createInsertFn collection entity = do
 createUpdateByFn collection paramName paramValue entity = do
   let action = fetch (select [paramName =: paramValue] collection) >>= save collection . merge (toBSON entity)
   runDB action
+
+createPartialUpdateByFn collection queryParams updatedFields = do
+  let action = modify (select queryParams collection) ["$set" =: updatedFields]
+  runDB action
+
+createPartialUpdateByFn' collection paramName paramValue fieldName fieldValue =
+  createPartialUpdateByFn collection [paramName =: paramValue] [fieldName =: fieldValue]
 
 createDeleteEntitiesFn collection = do
   let action = delete $ select [] collection

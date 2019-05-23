@@ -108,6 +108,11 @@ changeOrganizationState organizationId maybeHash reqDto =
         deleteActionKey (actionKey ^. hash)
         return . Right . toDTO $ updatedOrg
 
+updateStatistics :: Organization -> AppContextM ()
+updateStatistics org = do
+  now <- liftIO getCurrentTime
+  updateOrganizationLastAccessAt (org ^. organizationId) now
+
 -- --------------------------------
 -- PERMISSIONS
 -- --------------------------------

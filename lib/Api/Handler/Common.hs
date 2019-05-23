@@ -31,6 +31,7 @@ import Model.Context.BaseContext
 import Model.Error.Error
 import Model.Error.ErrorHelpers
 import Model.Organization.Organization
+import Service.Organization.OrganizationService
 import Util.Logger
 import Util.Token
 import Util.Uuid
@@ -67,9 +68,16 @@ runInAuthService organization function = do
         , _appContextTraceUuid = traceUuid
         , _appContextCurrentOrganization = Just organization
         }
-  liftAndCatchIO $ runStdoutLoggingT $ runReaderT (runAppContextM $ function) appContext
+  liftAndCatchIO $ runStdoutLoggingT $ runReaderT (runAppContextM (updateStatistics organization)) appContext
+  liftAndCatchIO $ runStdoutLoggingT $ runReaderT (runAppContextM function) appContext
 
 getAuthServiceExecutor callback = getCurrentOrganization $ \organization -> callback $ runInAuthService organization
+
+getMaybeAuthServiceExecutor callback =
+  isLogged $ \orgIsLogged ->
+    if orgIsLogged
+      then getCurrentOrganization $ \organization -> callback $ runInAuthService organization
+      else callback runInUnauthService
 
 getReqDto callback = do
   reqBody <- body

@@ -2,6 +2,7 @@ module Database.DAO.Organization.OrganizationDAO where
 
 import Control.Lens ((^.))
 import Data.Bson
+import Data.Time
 
 import Database.BSON.Organization.Organization ()
 import Database.DAO.Common
@@ -32,6 +33,11 @@ insertOrganization = createInsertFn collection
 
 updateOrganization :: Organization -> AppContextM ()
 updateOrganization org = createUpdateByFn collection "organizationId" (org ^. organizationId) org
+
+-- updateOrganizationLastAccessAt :: String -> String -> AppContextM ()
+updateOrganizationLastAccessAt :: String -> UTCTime -> AppContextM ()
+updateOrganizationLastAccessAt orgId lastAccessAt =
+  createPartialUpdateByFn' collection "organizationId" orgId "lastAccessAt" lastAccessAt
 
 deleteOrganizations :: AppContextM ()
 deleteOrganizations = createDeleteEntitiesFn collection
