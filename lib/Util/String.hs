@@ -4,13 +4,15 @@ module Util.String
   , splitOn
   ) where
 
-import Control.Monad (replicateM)
+import Crypto.Random (getRandomBytes)
+import Data.ByteArray.Encoding (Base(..), convertToBase)
+import qualified Data.ByteString.Char8 as BS
 import Data.Char (toLower)
 import qualified Data.Text as T
-import System.Random (getStdRandom, randomR)
 
 generateRandomString :: Int -> IO String
-generateRandomString lengthOfString = replicateM lengthOfString (getStdRandom $ randomR ('a', 'z'))
+generateRandomString lengthOfString =
+  (getRandomBytes lengthOfString :: IO BS.ByteString) >>= return . BS.unpack . convertToBase Base64URLUnpadded
 
 lowerFirst :: String -> String
 lowerFirst [] = []

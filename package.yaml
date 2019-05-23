@@ -53,6 +53,7 @@ library:
   - http-types
   - lens
   - lens-aeson
+  - memory
   - mime-mail
   - mime-types
   - MissingH
