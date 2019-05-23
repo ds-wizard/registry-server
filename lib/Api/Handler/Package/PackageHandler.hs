@@ -18,13 +18,12 @@ getPackagesA =
       Left error -> sendError error
 
 getPackageA :: Endpoint
-getPackageA =
-  getMaybeAuthServiceExecutor $ \runInMaybeAuthService -> do
-    pkgId <- param "pkgId"
-    eitherResDto <- runInMaybeAuthService $ getPackageById pkgId
-    case eitherResDto of
-      Right resDto -> json resDto
-      Left error -> sendError error
+getPackageA = do
+  pkgId <- param "pkgId"
+  eitherResDto <- runInUnauthService $ getPackageById pkgId
+  case eitherResDto of
+    Right resDto -> json resDto
+    Left error -> sendError error
 
 getPackageBundleA :: Endpoint
 getPackageBundleA =

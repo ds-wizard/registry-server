@@ -23,7 +23,6 @@ toDTO organization =
   , _organizationDTOActive = organization ^. active
   , _organizationDTOCreatedAt = organization ^. createdAt
   , _organizationDTOUpdatedAt = organization ^. updatedAt
-  , _organizationDTOLastAccessAt = organization ^. lastAccessAt
   }
 
 toSimpleDTO :: Organization -> OrganizationSimpleDTO
@@ -55,7 +54,6 @@ fromCreateDTO dto orgRole orgToken orgCreatedAt orgUpdatedAt orgLastAccessAt =
   , _organizationLogo = Nothing
   , _organizationCreatedAt = orgCreatedAt
   , _organizationUpdatedAt = orgUpdatedAt
-  , _organizationLastAccessAt = orgLastAccessAt
   }
 
 fromChangeDTO :: OrganizationChangeDTO -> OrganizationDTO -> UTCTime -> Organization
@@ -71,5 +69,4 @@ fromChangeDTO dto org orgUpdatedAt =
   , _organizationLogo = org ^. logo
   , _organizationCreatedAt = org ^. createdAt
   , _organizationUpdatedAt = orgUpdatedAt
-  , _organizationLastAccessAt = org ^. lastAccessAt
   }

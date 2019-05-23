@@ -19,14 +19,16 @@ import Model.Context.AppContext
 import Model.Error.Error
 import Model.Package.Package
 import Model.Package.PackageWithEvents
+import Service.Audit.AuditService
 import Service.Package.PackageMapper
 import Util.Helper (createHeeHelper)
 import Util.List (foldEithersInContext)
 
 getSimplePackagesFiltered :: [(Text, Text)] -> AppContextM (Either AppError [PackageSimpleDTO])
-getSimplePackagesFiltered queryParams =
-  heFindPackagesFiltered queryParams $ \pkgs ->
-    foldEithersInContext . mapToSimpleDTO . chooseTheNewest . groupPkgs $ pkgs
+getSimplePackagesFiltered queryParams = do
+  heAuditListPackages $ \_ ->
+    heFindPackagesFiltered queryParams $ \pkgs ->
+      foldEithersInContext . mapToSimpleDTO . chooseTheNewest . groupPkgs $ pkgs
   where
     groupPkgs :: [Package] -> [[Package]]
     groupPkgs = groupBy (\p1 p2 -> (p1 ^. organizationId) == (p2 ^. organizationId) && (p1 ^. kmId) == (p2 ^. kmId))

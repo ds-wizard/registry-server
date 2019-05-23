@@ -16,7 +16,6 @@ data OrganizationDTO = OrganizationDTO
   , _organizationDTOLogo :: Maybe String
   , _organizationDTOCreatedAt :: UTCTime
   , _organizationDTOUpdatedAt :: UTCTime
-  , _organizationDTOLastAccessAt :: UTCTime
   } deriving (Show, Generic)
 
 instance Eq OrganizationDTO where

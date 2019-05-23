@@ -18,7 +18,6 @@ instance ToBSON Organization where
     , "logo" BSON.=: _organizationLogo
     , "createdAt" BSON.=: _organizationCreatedAt
     , "updatedAt" BSON.=: _organizationUpdatedAt
-    , "lastAccessAt" BSON.=: _organizationLastAccessAt
     ]
 
 instance FromBSON Organization where
@@ -33,5 +32,4 @@ instance FromBSON Organization where
     _organizationLogo <- BSON.lookup "logo" doc
     _organizationCreatedAt <- BSON.lookup "createdAt" doc
     _organizationUpdatedAt <- BSON.lookup "updatedAt" doc
-    _organizationLastAccessAt <- BSON.lookup "lastAccessAt" doc
     return Organization {..}

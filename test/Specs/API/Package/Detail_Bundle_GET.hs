@@ -13,12 +13,14 @@ import Test.Hspec.Wai.Matcher
 
 import Api.Resource.Error.ErrorDTO ()
 import Api.Resource.Package.PackageDetailJM ()
+import Database.Migration.Development.Audit.Data.AuditEntries
 import Database.Migration.Development.Package.Data.Packages
 import Database.Migration.Development.PackageBundle.Data.PackageBundles
 import LensesConfig
 import Model.Context.AppContext
 import Service.PackageBundle.PackageBundleMapper
 
+import Specs.API.Audit.Common
 import Specs.API.Common
 
 -- ------------------------------------------------------------------------
@@ -59,6 +61,8 @@ test_200 appContext = do
     let responseMatcher =
           ResponseMatcher {matchHeaders = expHeaders, matchStatus = expStatus, matchBody = bodyEquals expBody}
     response `shouldRespondWith` responseMatcher
+     -- AND: Find result in DB and compare with expectation state
+    assertExistenceOfAuditEntryInDB appContext getPackageBundleAuditEntry
 
 -- ----------------------------------------------------
 -- ----------------------------------------------------

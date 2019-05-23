@@ -22,7 +22,6 @@ orgDsw =
   , _organizationLogo = Just orgLogo
   , _organizationCreatedAt = UTCTime (fromJust $ fromGregorianValid 2018 1 20) 0
   , _organizationUpdatedAt = UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0
-  , _organizationLastAccessAt = UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0
   }
 
 orgDswCreate :: OrganizationCreateDTO
@@ -47,7 +46,6 @@ editedOrgDsw =
   , _organizationLogo = orgDsw ^. logo
   , _organizationCreatedAt = orgDsw ^. createdAt
   , _organizationUpdatedAt = orgDsw ^. updatedAt
-  , _organizationLastAccessAt = orgDsw ^. lastAccessAt
   }
 
 editedOrgDswChange :: OrganizationChangeDTO
@@ -71,7 +69,6 @@ orgNetherlands =
   , _organizationLogo = Just orgLogo
   , _organizationCreatedAt = UTCTime (fromJust $ fromGregorianValid 2018 1 20) 0
   , _organizationUpdatedAt = UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0
-  , _organizationLastAccessAt = UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0
   }
 
 orgLogo :: String

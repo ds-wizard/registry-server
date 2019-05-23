@@ -4,6 +4,8 @@ module Database.Migration.Development.Migration
 
 import Constant.Component
 import qualified
+       Database.Migration.Development.Audit.AuditMigration as ADT
+import qualified
        Database.Migration.Development.Organization.OrganizationMigration
        as ORG
 import qualified
@@ -14,4 +16,5 @@ runMigration = do
   logInfo $ msg _CMP_MIGRATION "started"
   ORG.runMigration
   PKG.runMigration
+  ADT.runMigration
   logInfo $ msg _CMP_MIGRATION "ended"

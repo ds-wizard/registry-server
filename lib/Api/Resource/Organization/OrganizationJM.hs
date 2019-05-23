@@ -17,7 +17,6 @@ instance FromJSON OrganizationDTO where
     _organizationDTOLogo <- o .: "logo"
     _organizationDTOCreatedAt <- o .: "createdAt"
     _organizationDTOUpdatedAt <- o .: "updatedAt"
-    _organizationDTOLastAccessAt <- o .: "lastAccessAt"
     role <- o .: "role"
     case deserializeOrganizationRole role of
       (Just _organizationDTORole) -> return OrganizationDTO {..}
@@ -37,5 +36,4 @@ instance ToJSON OrganizationDTO where
       , "logo" .= _organizationDTOLogo
       , "createdAt" .= _organizationDTOCreatedAt
       , "updatedAt" .= _organizationDTOUpdatedAt
-      , "lastAccessAt" .= _organizationDTOLastAccessAt
       ]

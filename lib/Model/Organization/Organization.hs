@@ -19,7 +19,6 @@ data Organization = Organization
   , _organizationLogo :: Maybe String
   , _organizationCreatedAt :: UTCTime
   , _organizationUpdatedAt :: UTCTime
-  , _organizationLastAccessAt :: UTCTime
   } deriving (Show, Generic)
 
 instance Eq Organization where
