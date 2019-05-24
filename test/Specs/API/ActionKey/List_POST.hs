@@ -60,7 +60,7 @@ test_201 appContext =
     response `shouldRespondWith` responseMatcher
      -- AND: Find result in DB and compare with expectation state
     actionKeyFromDb <- getFirstFromDB findActionKeys appContext
-    liftIO $ show (actionKeyFromDb ^. aType) `shouldBe` reqDto ^. aType
+    liftIO $ (actionKeyFromDb ^. aType) `shouldBe` reqDto ^. aType
     liftIO $ actionKeyFromDb ^. organizationId `shouldBe` orgDsw ^. organizationId
 
 -- ----------------------------------------------------

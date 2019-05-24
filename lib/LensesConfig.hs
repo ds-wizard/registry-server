@@ -3,8 +3,15 @@ module LensesConfig where
 import Control.Lens (makeFields)
 
 import Api.Resource.ActionKey.ActionKeyDTO
-import Api.Resource.Event.EventDTO
+import Api.Resource.Event.AnswerEventDTO
+import Api.Resource.Event.ChapterEventDTO
 import Api.Resource.Event.EventPathDTO
+import Api.Resource.Event.ExpertEventDTO
+import Api.Resource.Event.IntegrationEventDTO
+import Api.Resource.Event.KnowledgeModelEventDTO
+import Api.Resource.Event.QuestionEventDTO
+import Api.Resource.Event.ReferenceEventDTO
+import Api.Resource.Event.TagEventDTO
 import Api.Resource.Info.InfoDTO
 import Api.Resource.KnowledgeModel.KnowledgeModelDTO
 import Api.Resource.Organization.OrganizationChangeDTO

@@ -7,6 +7,7 @@ import Web.Scotty.Trans (json)
 
 import Api.Handler.Common
 import Api.Resource.Info.InfoDTO
+import Api.Resource.Info.InfoJM ()
 import LensesConfig
 import Model.Context.BaseContext
 

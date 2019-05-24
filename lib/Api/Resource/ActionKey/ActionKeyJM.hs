@@ -1,16 +1,17 @@
 module Api.Resource.ActionKey.ActionKeyJM where
 
-import Control.Monad
 import Data.Aeson
 
 import Api.Resource.ActionKey.ActionKeyDTO
+import Model.ActionKey.ActionKey
+import Util.JSON (simpleParseJSON, simpleToJSON)
+
+instance FromJSON ActionKeyType
+
+instance ToJSON ActionKeyType
 
 instance FromJSON ActionKeyDTO where
-  parseJSON (Object o) = do
-    _actionKeyDTOAType <- o .: "type"
-    _actionKeyDTOEmail <- o .: "email"
-    return ActionKeyDTO {..}
-  parseJSON _ = mzero
+  parseJSON = simpleParseJSON "_actionKeyDTO"
 
 instance ToJSON ActionKeyDTO where
-  toJSON ActionKeyDTO {..} = object ["type" .= _actionKeyDTOAType, "email" .= _actionKeyDTOEmail]
+  toJSON = simpleToJSON "_actionKeyDTO"

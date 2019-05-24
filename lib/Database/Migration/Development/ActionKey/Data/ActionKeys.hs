@@ -29,4 +29,4 @@ forgTokActionKey =
   }
 
 forgTokActionKeyDto =
-  ActionKeyDTO {_actionKeyDTOAType = show $ forgTokActionKey ^. aType, _actionKeyDTOEmail = orgDsw ^. email}
+  ActionKeyDTO {_actionKeyDTOAType = forgTokActionKey ^. aType, _actionKeyDTOEmail = orgDsw ^. email}
