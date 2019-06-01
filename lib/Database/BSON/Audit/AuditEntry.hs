@@ -3,6 +3,7 @@ module Database.BSON.Audit.AuditEntry where
 import qualified Data.Bson as BSON
 import Data.Bson.Generic
 
+import Database.BSON.Statistics.InstanceStatistics ()
 import Model.Audit.AuditEntry
 
 instance ToBSON AuditEntry where
@@ -20,12 +21,14 @@ instance ToBSON ListPackagesAuditEntry where
   toBSON ListPackagesAuditEntry {..} =
     [ "type" BSON.=: "ListPackagesAuditEntry"
     , "organizationId" BSON.=: _listPackagesAuditEntryOrganizationId
+    , "instanceStatistics" BSON.=: _listPackagesAuditEntryInstanceStatistics
     , "createdAt" BSON.=: _listPackagesAuditEntryCreatedAt
     ]
 
 instance FromBSON ListPackagesAuditEntry where
   fromBSON doc = do
     _listPackagesAuditEntryOrganizationId <- BSON.lookup "organizationId" doc
+    _listPackagesAuditEntryInstanceStatistics <- BSON.lookup "instanceStatistics" doc
     _listPackagesAuditEntryCreatedAt <- BSON.lookup "createdAt" doc
     return ListPackagesAuditEntry {..}
 

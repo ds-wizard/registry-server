@@ -118,6 +118,19 @@ getListOfQueryParamsIfPresent = Prelude.foldr go (return [])
         Just value -> return $ Just (LT.toStrict name, value)
         Nothing -> return Nothing
 
+getListOfHeaders :: [String] -> ActionT LT.Text BaseContextM [(String, String)]
+getListOfHeaders = Prelude.foldr go (return [])
+  where
+    go name monadAcc = do
+      value <- extractHeader name
+      acc <- monadAcc
+      return $ maybeToList value ++ acc
+    extractHeader name = do
+      mValue <- header (LT.pack name)
+      case mValue of
+        Just value -> return $ Just (name, LT.unpack value)
+        Nothing -> return Nothing
+
 isLogged callback = do
   tokenHeader <- header (LT.pack authorizationHeaderName)
   callback . isJust $ tokenHeader

@@ -13,4 +13,4 @@ import Specs.API.Common
 -- --------------------------------
 assertExistenceOfAuditEntryInDB appContext ae = do
   aeD <- getFirstFromDB findAuditEntries appContext
-  liftIO $ (ae == aeD) `shouldBe` True
+  liftIO $ ae `shouldBe` aeD

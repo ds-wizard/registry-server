@@ -42,6 +42,7 @@ import Model.Organization.Organization
 import Model.Package.Package
 import Model.Package.PackageWithEvents
 import Model.PackageBundle.PackageBundle
+import Model.Statistics.InstanceStatistics
 
 -- -------------------------------------
 -- Model
@@ -191,6 +192,9 @@ makeFields ''PackageWithEvents
 
 -- Model / PackageBundle
 makeFields ''PackageBundle
+
+-- Model / Statistics
+makeFields ''InstanceStatistics
 
 -- -------------------------------------
 -- Api / Resource

@@ -5,6 +5,8 @@ import Control.Monad.Logger (runStdoutLoggingT)
 import Control.Monad.Reader (runReaderT)
 import Data.Aeson (encode)
 import Data.Aeson (eitherDecode)
+import qualified Data.ByteString.Char8 as BS
+import qualified Data.CaseInsensitive as CI
 import Data.Either (isRight)
 import Data.Foldable
 import qualified Data.List as L
@@ -19,6 +21,8 @@ import Web.Scotty.Trans (scottyAppT)
 
 import Api.Resource.Error.ErrorDTO ()
 import Api.Router
+import Constant.Api
+import Database.Migration.Development.Statistics.Data.InstanceStatistics
 import LensesConfig
 import Localization
 import Model.Context.AppContext
@@ -48,6 +52,13 @@ reqUserAuthHeader = ("Authorization", "Bearer NetherlandsToken")
 
 reqCtHeader :: Header
 reqCtHeader = ("Content-Type", "application/json; charset=utf-8")
+
+reqStatisticsHeader :: [Header]
+reqStatisticsHeader =
+  [ (CI.mk . BS.pack $ xDswUserCountHeaderName, BS.pack . show $ iStat ^. userCount)
+  , (CI.mk . BS.pack $ xDswPkgCountHeaderName, BS.pack . show $ iStat ^. pkgCount)
+  , (CI.mk . BS.pack $ xDswQtnCountHeaderName, BS.pack . show $ iStat ^. qtnCount)
+  ]
 
 resCtHeaderPlain :: Header
 resCtHeaderPlain = ("Content-Type", "application/json; charset=utf-8")

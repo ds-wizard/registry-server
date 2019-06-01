@@ -24,9 +24,9 @@ import Service.Package.PackageMapper
 import Util.Helper (createHeeHelper)
 import Util.List (foldEithersInContext)
 
-getSimplePackagesFiltered :: [(Text, Text)] -> AppContextM (Either AppError [PackageSimpleDTO])
-getSimplePackagesFiltered queryParams = do
-  heAuditListPackages $ \_ ->
+getSimplePackagesFiltered :: [(Text, Text)] -> [(String, String)] -> AppContextM (Either AppError [PackageSimpleDTO])
+getSimplePackagesFiltered queryParams headers = do
+  heAuditListPackages headers $ \_ ->
     heFindPackagesFiltered queryParams $ \pkgs ->
       foldEithersInContext . mapToSimpleDTO . chooseTheNewest . groupPkgs $ pkgs
   where

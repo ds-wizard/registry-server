@@ -60,7 +60,7 @@ test_200 appContext = do
   it "HTTP 200 OK (With Audit)" $
      -- GIVEN: Prepare request
    do
-    let reqHeaders = [reqCtHeader, reqAdminAuthHeader]
+    let reqHeaders = [reqCtHeader, reqAdminAuthHeader] ++ reqStatisticsHeader
      -- AND: Prepare expectation
     let expStatus = 200
     let expHeaders = [resCtHeader] ++ resCorsHeaders

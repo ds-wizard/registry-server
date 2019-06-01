@@ -6,6 +6,7 @@ import Data.Time
 
 import Database.Migration.Development.Organization.Data.Organizations
 import Database.Migration.Development.Package.Data.Packages
+import Database.Migration.Development.Statistics.Data.InstanceStatistics
 import LensesConfig
 import Model.Audit.AuditEntry
 
@@ -14,6 +15,7 @@ listPackagesAuditEntry =
   ListPackagesAuditEntry' $
   ListPackagesAuditEntry
   { _listPackagesAuditEntryOrganizationId = orgDsw ^. organizationId
+  , _listPackagesAuditEntryInstanceStatistics = iStat
   , _listPackagesAuditEntryCreatedAt = UTCTime (fromJust $ fromGregorianValid 2018 1 20) 0
   }
 
