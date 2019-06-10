@@ -7,7 +7,7 @@ module Service.Package.PackageService
   ) where
 
 import Control.Lens ((^.))
-import Data.List
+import Data.List (maximumBy)
 import Data.Text (Text)
 
 import Api.Resource.Package.PackageDetailDTO
@@ -22,7 +22,7 @@ import Model.Package.PackageWithEvents
 import Service.Audit.AuditService
 import Service.Package.PackageMapper
 import Util.Helper (createHeeHelper)
-import Util.List (foldEithersInContext)
+import Util.List (foldEithersInContext, groupBy)
 
 getSimplePackagesFiltered :: [(Text, Text)] -> [(String, String)] -> AppContextM (Either AppError [PackageSimpleDTO])
 getSimplePackagesFiltered queryParams headers = do
