@@ -45,6 +45,12 @@ validateOrganizationEmailUniqueness email = do
       return . Just . createErrorWithFieldError $ ("email", _ERROR_VALIDATION__ENTITY_UNIQUENESS "Organization" email)
     Left error -> return . Just $ error
 
+validateOrganizationChangedEmailUniqueness :: String -> String -> AppContextM (Maybe AppError)
+validateOrganizationChangedEmailUniqueness newEmail oldEmail =
+  if newEmail /= oldEmail
+    then validateOrganizationEmailUniqueness newEmail
+    else return Nothing
+
 -- --------------------------------
 -- HELPERS
 -- --------------------------------
@@ -56,3 +62,7 @@ hmValidateOrganizationIdUniqueness orgId callback = createHmmHelper (validateOrg
 -- --------------------------------
 hmValidateOrganizationEmailUniqueness email callback =
   createHmmHelper (validateOrganizationEmailUniqueness email) callback
+
+-- --------------------------------
+heValidateOrganizationChangedEmailUniqueness newEmail oldEmail callback =
+  createHmeHelper (validateOrganizationChangedEmailUniqueness newEmail oldEmail) callback

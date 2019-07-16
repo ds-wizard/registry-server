@@ -63,11 +63,12 @@ getOrganizationByToken token =
 
 modifyOrganization :: String -> OrganizationChangeDTO -> AppContextM (Either AppError OrganizationDTO)
 modifyOrganization orgId reqDto =
-  heGetOrganizationByOrgId orgId $ \org -> do
-    now <- liftIO getCurrentTime
-    let organization = fromChangeDTO reqDto org now
-    updateOrganization organization
-    return . Right . toDTO $ organization
+  heGetOrganizationByOrgId orgId $ \org ->
+    heValidateOrganizationChangedEmailUniqueness (reqDto ^. email) (org ^. email) $ do
+      now <- liftIO getCurrentTime
+      let organization = fromChangeDTO reqDto org now
+      updateOrganization organization
+      return . Right . toDTO $ organization
 
 deleteOrganization :: String -> AppContextM (Maybe AppError)
 deleteOrganization orgId =
