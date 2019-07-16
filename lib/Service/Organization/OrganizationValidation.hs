@@ -41,8 +41,7 @@ validateOrganizationEmailUniqueness email = do
   eOrg <- findOrganizationByEmail email
   case eOrg of
     Left (NotExistsError _) -> return Nothing
-    Right _ ->
-      return . Just . createErrorWithFieldError $ ("email", _ERROR_VALIDATION__ENTITY_UNIQUENESS "Organization" email)
+    Right _ -> return . Just . createErrorWithFieldError $ ("email", _ERROR_VALIDATION__ENTITY_UNIQUENESS "Email" email)
     Left error -> return . Just $ error
 
 validateOrganizationChangedEmailUniqueness :: String -> String -> AppContextM (Maybe AppError)
