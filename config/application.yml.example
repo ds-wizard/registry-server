@@ -28,6 +28,7 @@ mail:
   host:
   port:
   ssl:
+  authEnabled:
   username:
   password:
 
