@@ -32,6 +32,7 @@ data AppConfigMail = AppConfigMail
   , _appConfigMailHost :: Maybe String
   , _appConfigMailPort :: Maybe Int
   , _appConfigMailSsl :: Maybe Bool
+  , _appConfigMailAuthEnabled :: Maybe Bool
   , _appConfigMailUsername :: Maybe String
   , _appConfigMailPassword :: Maybe String
   } deriving (Generic, Show)
