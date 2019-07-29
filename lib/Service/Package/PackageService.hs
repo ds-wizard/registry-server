@@ -47,7 +47,7 @@ getPackageById pkgId =
 getSeriesOfPackages :: String -> AppContextM (Either AppError [PackageWithEvents])
 getSeriesOfPackages pkgId =
   heFindPackageWithEventsById pkgId $ \package ->
-    case package ^. parentPackageId of
+    case package ^. previousPackageId of
       Just parentPkgId ->
         heGetSeriesOfPackages parentPkgId $ \parentPackages -> return . Right $ parentPackages ++ [package]
       Nothing -> return . Right $ [package]

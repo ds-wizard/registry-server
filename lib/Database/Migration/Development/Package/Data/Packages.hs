@@ -22,7 +22,9 @@ globalPackageEmpty =
   , _packageWithEventsDescription = "Empty package"
   , _packageWithEventsReadme = "# DSW Global Knowledge Model"
   , _packageWithEventsLicense = "## License\\n There should be some license"
-  , _packageWithEventsParentPackageId = Nothing
+  , _packageWithEventsPreviousPackageId = Nothing
+  , _packageWithEventsForkOfPackageId = Nothing
+  , _packageWithEventsMergeCheckpointPackageId = Nothing
   , _packageWithEventsEvents = []
   , _packageWithEventsCreatedAt = (UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0)
   }
@@ -39,7 +41,9 @@ globalPackage =
   , _packageWithEventsDescription = "First Release"
   , _packageWithEventsReadme = "# DSW Global Knowledge Model"
   , _packageWithEventsLicense = "## License\\n There should be some license"
-  , _packageWithEventsParentPackageId = Nothing
+  , _packageWithEventsPreviousPackageId = Nothing
+  , _packageWithEventsForkOfPackageId = Nothing
+  , _packageWithEventsMergeCheckpointPackageId = Nothing
   , _packageWithEventsEvents =
       [ AddKnowledgeModelEvent' a_km1
       , AddTagEvent' a_km1_tds
@@ -62,7 +66,9 @@ netherlandsPackage =
   , _packageWithEventsDescription = "First Release"
   , _packageWithEventsReadme = "# DSW Netherlands Knowledge Model"
   , _packageWithEventsLicense = "## License\\n There should be some license"
-  , _packageWithEventsParentPackageId = (Just $ globalPackage ^. pId)
+  , _packageWithEventsPreviousPackageId = Just $ globalPackage ^. pId
+  , _packageWithEventsForkOfPackageId = Just $ globalPackage ^. pId
+  , _packageWithEventsMergeCheckpointPackageId = Just $ globalPackage ^. pId
   , _packageWithEventsEvents = [AddChapterEvent' a_km1_ch1]
   , _packageWithEventsCreatedAt = (UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0)
   }
@@ -79,7 +85,9 @@ netherlandsPackageV2 =
   , _packageWithEventsDescription = "Second Release"
   , _packageWithEventsReadme = "# DSW Netherlands Knowledge Model"
   , _packageWithEventsLicense = "## License\\n There should be some license"
-  , _packageWithEventsParentPackageId = (Just $ netherlandsPackage ^. pId)
+  , _packageWithEventsPreviousPackageId = Just $ netherlandsPackage ^. pId
+  , _packageWithEventsForkOfPackageId = Just $ globalPackage ^. pId
+  , _packageWithEventsMergeCheckpointPackageId = Just $ globalPackage ^. pId
   , _packageWithEventsEvents = [AddChapterEvent' a_km1_ch4]
   , _packageWithEventsCreatedAt = (UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0)
   }
@@ -96,7 +104,9 @@ amsterdamPackage =
   , _packageWithEventsDescription = "First Release"
   , _packageWithEventsReadme = "# DSW Amsterdam Knowledge Model"
   , _packageWithEventsLicense = "## License\\n There should be some license"
-  , _packageWithEventsParentPackageId = (Just $ netherlandsPackage ^. pId)
+  , _packageWithEventsPreviousPackageId = Just $ netherlandsPackage ^. pId
+  , _packageWithEventsForkOfPackageId = Just $ netherlandsPackage ^. pId
+  , _packageWithEventsMergeCheckpointPackageId = Just $ netherlandsPackage ^. pId
   , _packageWithEventsEvents = []
   , _packageWithEventsCreatedAt = (UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0)
   }
@@ -113,7 +123,9 @@ germanyPackage =
   , _packageWithEventsDescription = "First Release"
   , _packageWithEventsReadme = "# DSW Germany"
   , _packageWithEventsLicense = "## License\\n There should be some license"
-  , _packageWithEventsParentPackageId = (Just $ globalPackageEmpty ^. pId)
+  , _packageWithEventsPreviousPackageId = Just $ globalPackageEmpty ^. pId
+  , _packageWithEventsForkOfPackageId = Just $ globalPackageEmpty ^. pId
+  , _packageWithEventsMergeCheckpointPackageId = Just $ globalPackageEmpty ^. pId
   , _packageWithEventsEvents =
       [ AddKnowledgeModelEvent' a_km1
       , AddTagEvent' a_km1_tds

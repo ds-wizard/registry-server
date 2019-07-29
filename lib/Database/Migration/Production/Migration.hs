@@ -12,6 +12,9 @@ import qualified
 import qualified
        Database.Migration.Production.Migration_0003_package_license.Migration
        as M_0003
+import qualified
+       Database.Migration.Production.Migration_0004_forkOfPackageId_and_mergeCheckpointPackageId.Migration
+       as M_0004
 import Database.MongoDB.Migration.Entity
 import Database.MongoDB.Migration.Migration
 import LensesConfig
@@ -21,4 +24,4 @@ runMigration baseContext = do
   return ()
 
 migrationDefinitions :: [MigrationDefinition]
-migrationDefinitions = [M_0001.definition, M_0002.definition, M_0003.definition]
+migrationDefinitions = [M_0001.definition, M_0002.definition, M_0003.definition, M_0004.definition]
