@@ -41,9 +41,14 @@ validateOrganizationEmailUniqueness email = do
   eOrg <- findOrganizationByEmail email
   case eOrg of
     Left (NotExistsError _) -> return Nothing
-    Right _ ->
-      return . Just . createErrorWithFieldError $ ("email", _ERROR_VALIDATION__ENTITY_UNIQUENESS "Organization" email)
+    Right _ -> return . Just . createErrorWithFieldError $ ("email", _ERROR_VALIDATION__ENTITY_UNIQUENESS "Email" email)
     Left error -> return . Just $ error
+
+validateOrganizationChangedEmailUniqueness :: String -> String -> AppContextM (Maybe AppError)
+validateOrganizationChangedEmailUniqueness newEmail oldEmail =
+  if newEmail /= oldEmail
+    then validateOrganizationEmailUniqueness newEmail
+    else return Nothing
 
 -- --------------------------------
 -- HELPERS
@@ -56,3 +61,7 @@ hmValidateOrganizationIdUniqueness orgId callback = createHmmHelper (validateOrg
 -- --------------------------------
 hmValidateOrganizationEmailUniqueness email callback =
   createHmmHelper (validateOrganizationEmailUniqueness email) callback
+
+-- --------------------------------
+heValidateOrganizationChangedEmailUniqueness newEmail oldEmail callback =
+  createHmeHelper (validateOrganizationChangedEmailUniqueness newEmail oldEmail) callback

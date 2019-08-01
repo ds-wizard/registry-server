@@ -23,7 +23,10 @@ toPackage pkg =
   , _packageMetamodelVersion = pkg ^. metamodelVersion
   , _packageDescription = pkg ^. description
   , _packageReadme = pkg ^. readme
-  , _packageParentPackageId = pkg ^. parentPackageId
+  , _packageLicense = pkg ^. license
+  , _packagePreviousPackageId = pkg ^. previousPackageId
+  , _packageForkOfPackageId = pkg ^. forkOfPackageId
+  , _packageMergeCheckpointPackageId = pkg ^. mergeCheckpointPackageId
   , _packageCreatedAt = pkg ^. createdAt
   }
 
@@ -38,7 +41,10 @@ toDTO pkg =
   , _packageDTOMetamodelVersion = pkg ^. metamodelVersion
   , _packageDTODescription = pkg ^. description
   , _packageDTOReadme = pkg ^. readme
-  , _packageDTOParentPackageId = pkg ^. parentPackageId
+  , _packageDTOLicense = pkg ^. license
+  , _packageDTOPreviousPackageId = pkg ^. previousPackageId
+  , _packageDTOForkOfPackageId = pkg ^. forkOfPackageId
+  , _packageDTOMergeCheckpointPackageId = pkg ^. mergeCheckpointPackageId
   , _packageDTOEvents = toDTOs (pkg ^. events)
   , _packageDTOCreatedAt = pkg ^. createdAt
   }
@@ -66,8 +72,11 @@ toDetailDTO pkg versions org =
   , _packageDetailDTOVersion = pkg ^. version
   , _packageDetailDTODescription = pkg ^. description
   , _packageDetailDTOReadme = pkg ^. readme
+  , _packageDetailDTOLicense = pkg ^. license
   , _packageDetailDTOMetamodelVersion = pkg ^. metamodelVersion
-  , _packageDetailDTOParentPackageId = pkg ^. parentPackageId
+  , _packageDetailDTOPreviousPackageId = pkg ^. previousPackageId
+  , _packageDetailDTOForkOfPackageId = pkg ^. forkOfPackageId
+  , _packageDetailDTOMergeCheckpointPackageId = pkg ^. mergeCheckpointPackageId
   , _packageDetailDTOVersions = versions
   , _packageDetailDTOOrganization = OM.toSimpleDTO org
   , _packageDetailDTOCreatedAt = pkg ^. createdAt

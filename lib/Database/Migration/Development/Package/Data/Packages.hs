@@ -21,7 +21,10 @@ globalPackageEmpty =
   , _packageWithEventsMetamodelVersion = kmMetamodelVersion
   , _packageWithEventsDescription = "Empty package"
   , _packageWithEventsReadme = "# DSW Global Knowledge Model"
-  , _packageWithEventsParentPackageId = Nothing
+  , _packageWithEventsLicense = "## License\\n There should be some license"
+  , _packageWithEventsPreviousPackageId = Nothing
+  , _packageWithEventsForkOfPackageId = Nothing
+  , _packageWithEventsMergeCheckpointPackageId = Nothing
   , _packageWithEventsEvents = []
   , _packageWithEventsCreatedAt = (UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0)
   }
@@ -37,7 +40,10 @@ globalPackage =
   , _packageWithEventsMetamodelVersion = kmMetamodelVersion
   , _packageWithEventsDescription = "First Release"
   , _packageWithEventsReadme = "# DSW Global Knowledge Model"
-  , _packageWithEventsParentPackageId = Nothing
+  , _packageWithEventsLicense = "## License\\n There should be some license"
+  , _packageWithEventsPreviousPackageId = Nothing
+  , _packageWithEventsForkOfPackageId = Nothing
+  , _packageWithEventsMergeCheckpointPackageId = Nothing
   , _packageWithEventsEvents =
       [ AddKnowledgeModelEvent' a_km1
       , AddTagEvent' a_km1_tds
@@ -59,7 +65,10 @@ netherlandsPackage =
   , _packageWithEventsMetamodelVersion = kmMetamodelVersion
   , _packageWithEventsDescription = "First Release"
   , _packageWithEventsReadme = "# DSW Netherlands Knowledge Model"
-  , _packageWithEventsParentPackageId = (Just $ globalPackage ^. pId)
+  , _packageWithEventsLicense = "## License\\n There should be some license"
+  , _packageWithEventsPreviousPackageId = Just $ globalPackage ^. pId
+  , _packageWithEventsForkOfPackageId = Just $ globalPackage ^. pId
+  , _packageWithEventsMergeCheckpointPackageId = Just $ globalPackage ^. pId
   , _packageWithEventsEvents = [AddChapterEvent' a_km1_ch1]
   , _packageWithEventsCreatedAt = (UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0)
   }
@@ -75,7 +84,10 @@ netherlandsPackageV2 =
   , _packageWithEventsMetamodelVersion = kmMetamodelVersion
   , _packageWithEventsDescription = "Second Release"
   , _packageWithEventsReadme = "# DSW Netherlands Knowledge Model"
-  , _packageWithEventsParentPackageId = (Just $ netherlandsPackage ^. pId)
+  , _packageWithEventsLicense = "## License\\n There should be some license"
+  , _packageWithEventsPreviousPackageId = Just $ netherlandsPackage ^. pId
+  , _packageWithEventsForkOfPackageId = Just $ globalPackage ^. pId
+  , _packageWithEventsMergeCheckpointPackageId = Just $ globalPackage ^. pId
   , _packageWithEventsEvents = [AddChapterEvent' a_km1_ch4]
   , _packageWithEventsCreatedAt = (UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0)
   }
@@ -91,7 +103,10 @@ amsterdamPackage =
   , _packageWithEventsMetamodelVersion = kmMetamodelVersion
   , _packageWithEventsDescription = "First Release"
   , _packageWithEventsReadme = "# DSW Amsterdam Knowledge Model"
-  , _packageWithEventsParentPackageId = (Just $ netherlandsPackage ^. pId)
+  , _packageWithEventsLicense = "## License\\n There should be some license"
+  , _packageWithEventsPreviousPackageId = Just $ netherlandsPackage ^. pId
+  , _packageWithEventsForkOfPackageId = Just $ netherlandsPackage ^. pId
+  , _packageWithEventsMergeCheckpointPackageId = Just $ netherlandsPackage ^. pId
   , _packageWithEventsEvents = []
   , _packageWithEventsCreatedAt = (UTCTime (fromJust $ fromGregorianValid 2018 1 21) 0)
   }
@@ -107,7 +122,10 @@ germanyPackage =
   , _packageWithEventsMetamodelVersion = kmMetamodelVersion
   , _packageWithEventsDescription = "First Release"
   , _packageWithEventsReadme = "# DSW Germany"
-  , _packageWithEventsParentPackageId = (Just $ globalPackageEmpty ^. pId)
+  , _packageWithEventsLicense = "## License\\n There should be some license"
+  , _packageWithEventsPreviousPackageId = Just $ globalPackageEmpty ^. pId
+  , _packageWithEventsForkOfPackageId = Just $ globalPackageEmpty ^. pId
+  , _packageWithEventsMergeCheckpointPackageId = Just $ globalPackageEmpty ^. pId
   , _packageWithEventsEvents =
       [ AddKnowledgeModelEvent' a_km1
       , AddTagEvent' a_km1_tds

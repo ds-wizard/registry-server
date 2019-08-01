@@ -3,7 +3,7 @@ module Database.BSON.Organization.Organization where
 import qualified Data.Bson as BSON
 import Data.Bson.Generic
 
-import Database.BSON.Common
+import Database.BSON.Organization.OrganizationRole ()
 import Model.Organization.Organization
 
 instance ToBSON Organization where
@@ -12,7 +12,7 @@ instance ToBSON Organization where
     , "name" BSON.=: _organizationName
     , "description" BSON.=: _organizationDescription
     , "email" BSON.=: _organizationEmail
-    , "role" BSON.=: serializeOrganizationRole _organizationRole
+    , "role" BSON.=: _organizationRole
     , "token" BSON.=: _organizationToken
     , "active" BSON.=: _organizationActive
     , "logo" BSON.=: _organizationLogo
@@ -26,7 +26,7 @@ instance FromBSON Organization where
     _organizationName <- BSON.lookup "name" doc
     _organizationDescription <- BSON.lookup "description" doc
     _organizationEmail <- BSON.lookup "email" doc
-    _organizationRole <- deserializeOrganizationRole $ BSON.lookup "role" doc
+    _organizationRole <- BSON.lookup "role" doc
     _organizationToken <- BSON.lookup "token" doc
     _organizationActive <- BSON.lookup "active" doc
     _organizationLogo <- BSON.lookup "logo" doc

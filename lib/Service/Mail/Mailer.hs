@@ -197,10 +197,14 @@ sendEmail to mailMessage = do
       mailHost = fromMaybe "" $ mailConfig ^. host
       mailPort = mailConfig ^. port
       mailSSL = fromMaybe False $ mailConfig ^. ssl
+      mailAuthEnabled = fromMaybe False $ mailConfig ^. authEnabled
       mailUsername = fromMaybe "" $ mailConfig ^. username
       mailPassword = fromMaybe "" $ mailConfig ^. password
       callback connection = do
-        authSuccess <- SMTP.authenticate Auth.LOGIN mailUsername mailPassword connection
+        authSuccess <-
+          if mailAuthEnabled
+            then SMTP.authenticate Auth.LOGIN mailUsername mailPassword connection
+            else return True
         renderedMail <- MIME.renderMail' mailMessage
         if authSuccess
           then do

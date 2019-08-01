@@ -111,8 +111,6 @@ test_400_organizationId_duplication appContext =
      -- GIVEN: Prepare request
    do
     let orgId = orgDswCreate ^. organizationId
-    -- let reqDto = orgDswCreate & organizationId .~ "dsw-amsterdam"
-    -- let reqBody = encode reqDto
      -- AND: Prepare expectation
     let expStatus = 400
     let expHeaders = [resCtHeader] ++ resCorsHeaders
@@ -131,7 +129,7 @@ test_400_organizationId_duplication appContext =
 -- ----------------------------------------------------
 -- ----------------------------------------------------
 test_400_email_duplication appContext =
-  it "HTTP 400 BAD REQUEST when organizationId is already used" $
+  it "HTTP 400 BAD REQUEST when email is already used" $
      -- GIVEN: Prepare request
    do
     let orgEmail = orgDswCreate ^. email
@@ -140,7 +138,7 @@ test_400_email_duplication appContext =
      -- AND: Prepare expectation
     let expStatus = 400
     let expHeaders = [resCtHeader] ++ resCorsHeaders
-    let expDto = createErrorWithFieldError ("email", _ERROR_VALIDATION__ENTITY_UNIQUENESS "Organization" orgEmail)
+    let expDto = createErrorWithFieldError ("email", _ERROR_VALIDATION__ENTITY_UNIQUENESS "Email" orgEmail)
     let expBody = encode expDto
      -- WHEN: Call API
     response <- request reqMethod reqUrl reqHeaders reqBody

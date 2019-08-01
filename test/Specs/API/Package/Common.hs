@@ -27,4 +27,4 @@ comparePackageDtos resDto expDto = do
   liftIO $ (resDto ^. kmId) `shouldBe` (expDto ^. kmId)
   liftIO $ (resDto ^. version) `shouldBe` (expDto ^. version)
   liftIO $ (resDto ^. description) `shouldBe` (expDto ^. description)
-  liftIO $ (resDto ^. parentPackageId) `shouldBe` (expDto ^. parentPackageId)
+  liftIO $ (resDto ^. previousPackageId) `shouldBe` (expDto ^. previousPackageId)
