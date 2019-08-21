@@ -7,7 +7,6 @@ import Api.Resource.Event.AnswerEventJM ()
 import Api.Resource.Event.ChapterEventJM ()
 import Api.Resource.Event.EventDTO
 import Api.Resource.Event.EventFieldJM ()
-import Api.Resource.Event.EventPathJM ()
 import Api.Resource.Event.ExpertEventJM ()
 import Api.Resource.Event.IntegrationEventJM ()
 import Api.Resource.Event.KnowledgeModelEventJM ()
