@@ -56,7 +56,6 @@ library:
   - memory
   - mime-mail
   - mime-types
-  - MissingH
   - mtl
   - monad-control
   - monad-logger
@@ -65,7 +64,6 @@ library:
   - network
   - persistent
   - persistent-mongoDB
-  - persistent-template
   - pretty-simple
   - pretty-terminal
   - pwstore-fast
@@ -83,18 +81,15 @@ library:
   - vector
   - wai
   - wai-extra
-  - wai-cors
   - warp
   - wreq
   - yaml
   default-extensions:
     - TemplateHaskell
-    - QuasiQuotes
     - OverloadedStrings
     - MultiParamTypeClasses
     - FlexibleContexts
     - GeneralizedNewtypeDeriving
-    - GADTs
     - TypeFamilies
     - DeriveGeneric
     - ExtendedDefaultRules
@@ -148,7 +143,6 @@ tests:
     - mongoDB
     - network
     - persistent
-    - persistent-template
     - persistent-mongoDB
     - pretty-simple
     - pwstore-fast
@@ -163,7 +157,6 @@ tests:
     - vector
     - wai
     - wai-extra
-    - wai-cors
     - warp
     - yaml
     - registry-server
@@ -178,7 +171,6 @@ tests:
       - MultiParamTypeClasses
       - FlexibleContexts
       - GeneralizedNewtypeDeriving
-      - GADTs
       - TypeFamilies
       - DeriveGeneric
       - ExtendedDefaultRules
