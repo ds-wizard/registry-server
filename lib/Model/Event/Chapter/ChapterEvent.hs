@@ -1,30 +1,29 @@
 module Model.Event.Chapter.ChapterEvent where
 
-import Data.UUID
+import qualified Data.UUID as U
 import GHC.Generics
 
 import Model.Event.EventField
-import Model.Event.EventPath
 
 data AddChapterEvent = AddChapterEvent
-  { _addChapterEventUuid :: UUID
-  , _addChapterEventPath :: EventPath
-  , _addChapterEventChapterUuid :: UUID
+  { _addChapterEventUuid :: U.UUID
+  , _addChapterEventParentUuid :: U.UUID
+  , _addChapterEventEntityUuid :: U.UUID
   , _addChapterEventTitle :: String
-  , _addChapterEventText :: String
+  , _addChapterEventText :: Maybe String
   } deriving (Show, Eq, Generic)
 
 data EditChapterEvent = EditChapterEvent
-  { _editChapterEventUuid :: UUID
-  , _editChapterEventPath :: EventPath
-  , _editChapterEventChapterUuid :: UUID
+  { _editChapterEventUuid :: U.UUID
+  , _editChapterEventParentUuid :: U.UUID
+  , _editChapterEventEntityUuid :: U.UUID
   , _editChapterEventTitle :: EventField String
-  , _editChapterEventText :: EventField String
-  , _editChapterEventQuestionUuids :: EventField [UUID]
+  , _editChapterEventText :: EventField (Maybe String)
+  , _editChapterEventQuestionUuids :: EventField [U.UUID]
   } deriving (Show, Eq, Generic)
 
 data DeleteChapterEvent = DeleteChapterEvent
-  { _deleteChapterEventUuid :: UUID
-  , _deleteChapterEventPath :: EventPath
-  , _deleteChapterEventChapterUuid :: UUID
+  { _deleteChapterEventUuid :: U.UUID
+  , _deleteChapterEventParentUuid :: U.UUID
+  , _deleteChapterEventEntityUuid :: U.UUID
   } deriving (Show, Eq, Generic)

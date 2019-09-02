@@ -5,7 +5,6 @@ import Control.Lens (makeFields)
 import Api.Resource.ActionKey.ActionKeyDTO
 import Api.Resource.Event.AnswerEventDTO
 import Api.Resource.Event.ChapterEventDTO
-import Api.Resource.Event.EventPathDTO
 import Api.Resource.Event.ExpertEventDTO
 import Api.Resource.Event.IntegrationEventDTO
 import Api.Resource.Event.KnowledgeModelEventDTO
@@ -30,7 +29,6 @@ import Model.Context.BaseContext
 import Model.Event.Answer.AnswerEvent
 import Model.Event.Chapter.ChapterEvent
 import Model.Event.EventField
-import Model.Event.EventPath
 import Model.Event.Expert.ExpertEvent
 import Model.Event.Integration.IntegrationEvent
 import Model.Event.KnowledgeModel.KnowledgeModelEvent
@@ -70,8 +68,6 @@ makeFields ''AppContext
 
 -- Model / Event
 makeFields ''EventField
-
-makeFields ''EventPathItem
 
 makeFields ''AddKnowledgeModelEvent
 
@@ -150,6 +146,8 @@ makeFields ''DeleteIntegrationEvent
 -- Model / KnowledgeModel
 makeFields ''KnowledgeModel
 
+makeFields ''KnowledgeModelEntities
+
 makeFields ''Chapter
 
 makeFields ''Question
@@ -203,8 +201,6 @@ makeFields ''InstanceStatistics
 makeFields ''ActionKeyDTO
 
 -- Api / Resource / Event
-makeFields ''EventPathItemDTO
-
 makeFields ''AddKnowledgeModelEventDTO
 
 makeFields ''EditKnowledgeModelEventDTO
@@ -284,6 +280,8 @@ makeFields ''InfoDTO
 
 -- Api / Resource / KnowledgeModel
 makeFields ''KnowledgeModelDTO
+
+makeFields ''KnowledgeModelEntitiesDTO
 
 makeFields ''ChapterDTO
 

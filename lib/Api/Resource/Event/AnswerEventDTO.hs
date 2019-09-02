@@ -4,13 +4,12 @@ import qualified Data.UUID as U
 import GHC.Generics
 
 import Api.Resource.Event.EventFieldDTO
-import Api.Resource.Event.EventPathDTO
 import Api.Resource.KnowledgeModel.KnowledgeModelDTO
 
 data AddAnswerEventDTO = AddAnswerEventDTO
   { _addAnswerEventDTOUuid :: U.UUID
-  , _addAnswerEventDTOPath :: EventPathDTO
-  , _addAnswerEventDTOAnswerUuid :: U.UUID
+  , _addAnswerEventDTOParentUuid :: U.UUID
+  , _addAnswerEventDTOEntityUuid :: U.UUID
   , _addAnswerEventDTOLabel :: String
   , _addAnswerEventDTOAdvice :: Maybe String
   , _addAnswerEventDTOMetricMeasures :: [MetricMeasureDTO]
@@ -18,8 +17,8 @@ data AddAnswerEventDTO = AddAnswerEventDTO
 
 data EditAnswerEventDTO = EditAnswerEventDTO
   { _editAnswerEventDTOUuid :: U.UUID
-  , _editAnswerEventDTOPath :: EventPathDTO
-  , _editAnswerEventDTOAnswerUuid :: U.UUID
+  , _editAnswerEventDTOParentUuid :: U.UUID
+  , _editAnswerEventDTOEntityUuid :: U.UUID
   , _editAnswerEventDTOLabel :: EventFieldDTO String
   , _editAnswerEventDTOAdvice :: EventFieldDTO (Maybe String)
   , _editAnswerEventDTOFollowUpUuids :: EventFieldDTO [U.UUID]
@@ -28,6 +27,6 @@ data EditAnswerEventDTO = EditAnswerEventDTO
 
 data DeleteAnswerEventDTO = DeleteAnswerEventDTO
   { _deleteAnswerEventDTOUuid :: U.UUID
-  , _deleteAnswerEventDTOPath :: EventPathDTO
-  , _deleteAnswerEventDTOAnswerUuid :: U.UUID
+  , _deleteAnswerEventDTOParentUuid :: U.UUID
+  , _deleteAnswerEventDTOEntityUuid :: U.UUID
   } deriving (Show, Eq, Generic)

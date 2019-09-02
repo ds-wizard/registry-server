@@ -3,7 +3,6 @@ module Api.Resource.Event.KnowledgeModelEventJM where
 import Data.Aeson
 
 import Api.Resource.Event.EventFieldJM ()
-import Api.Resource.Event.EventPathJM ()
 import Api.Resource.Event.KnowledgeModelEventDTO
 import Util.JSON (simpleParseJSON, simpleToJSON')
 
