@@ -54,9 +54,8 @@ jobs:
         - stack build --no-terminal --skip-ghc-check --test
         - cp $(stack path --local-install-root)/bin/registry-server registry-server-bin
         # 4. Build Docker Image
-        # - docker pull $IMAGE_TAG_DEVELOP
-        # - docker build --cache-from $IMAGE_TAG_DEVELOP -t $IMAGE_TAG .
-        - docker build -t $IMAGE_TAG .
+        - docker pull $IMAGE_TAG_DEVELOP
+        - docker build --cache-from $IMAGE_TAG_DEVELOP -t $IMAGE_TAG .
         - docker push $IMAGE_TAG
 
     - stage: tag
