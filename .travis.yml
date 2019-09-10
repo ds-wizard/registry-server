@@ -21,7 +21,6 @@ cache:
   timeout: 600
   directories:
   - $HOME/.stack
-  - $HOME/.stack-work
   - .stack-work
 
 install:
@@ -32,6 +31,10 @@ install:
   # 2. Init Application Config
   - cp config/application.yml.example config/application.yml
   - cp config/application-test.yml.example config/application-test.yml
+  # 3. Update file timestamps
+  - ./scripts/update-file-timestamps.sh
+  # 3. Install app dependencies
+  - stack --no-terminal --install-ghc test --only-dependencies
 
 before_script:
   # 1. Log to private Docker Registry
@@ -49,6 +52,7 @@ jobs:
         - cd ..
         # 3. Build and Test Application
         - stack build --no-terminal --skip-ghc-check --test
+        - cp $(stack path --local-install-root)/bin/registry-server registry-server-bin
         # 4. Build Docker Image
         # - docker pull $IMAGE_TAG_DEVELOP
         # - docker build --cache-from $IMAGE_TAG_DEVELOP -t $IMAGE_TAG .
