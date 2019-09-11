@@ -1,5 +1,5 @@
 name: registry-server
-version: '1.2.0'
+version: '1.2.1'
 synopsis: Registry Server
 description: DSW Registry
 category: Web
