@@ -9,7 +9,7 @@ HEALTHCHECK --interval=5m --timeout=10s \
 RUN apt-get update && apt-get -qq -y install libmemcached-dev ca-certificates netbase wget gdebi-core curl
 
 # Add built exectutable binary
-ADD .stack-work/install/x86_64-linux/lts-13.12/8.6.4/bin/registry-server /registry/registry-server
+ADD registry-server-bin /registry/registry-server
 
 # Add templates
 ADD templates /registry/templates
