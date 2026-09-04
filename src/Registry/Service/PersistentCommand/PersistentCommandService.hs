@@ -28,13 +28,10 @@ createPersistentCommand persistentCommand =
         return persistentCommand
 
 runPersistentCommands' :: AppContextM ()
-runPersistentCommands' = runPersistentCommands runAppContextWithAppContext' updateContext emptyTransferFn execute
+runPersistentCommands' = runPersistentCommands runAppContextWithAppContext' updateContext execute
 
 runPersistentCommandChannelListener' :: AppContextM ()
-runPersistentCommandChannelListener' = runPersistentCommandChannelListener runAppContextWithAppContext' updateContext emptyTransferFn execute
-
-emptyTransferFn :: String -> PersistentCommand String -> AppContextM ()
-emptyTransferFn _ _ = return ()
+runPersistentCommandChannelListener' = runPersistentCommandChannelListener runAppContextWithAppContext' updateContext execute
 
 updateContext :: PersistentCommandSimple String -> AppContext -> AppContextM AppContext
 updateContext commandSimple = return

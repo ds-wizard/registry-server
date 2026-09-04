@@ -21,6 +21,7 @@ migrate dbPool = do
   createConstraints dbPool
   createIndexes dbPool
   createForeignKeys dbPool
+  insertOrganization dbPool
   return Nothing
 
 assertEmptySchema :: Pool Connection -> LoggingT IO ()
@@ -301,6 +302,24 @@ createForeignKeys dbPool = do
         \    ADD CONSTRAINT knowledge_model_package_previous_package_uuid_fk FOREIGN KEY (previous_package_uuid) REFERENCES knowledge_model_package(uuid) ON DELETE CASCADE; \
         \ALTER TABLE ONLY persistent_command \
         \    ADD CONSTRAINT persistent_command_created_by_fk FOREIGN KEY (created_by) REFERENCES organization(organization_id);"
+  let action conn = execute_ conn sql
+  liftIO $ withResource dbPool action
+  return ()
+
+insertOrganization :: Pool Connection -> LoggingT IO ()
+insertOrganization dbPool = do
+  let sql =
+        "INSERT INTO organization (organization_id, name, description, email, role, token, active, logo, created_at, updated_at) \
+        \VALUES ('organization', \
+        \        'Organization name', \
+        \        'Some description of Organization', \
+        \        'organization@example.com', \
+        \        'AdminRole', \
+        \        'GlobalToken', \
+        \        true, \
+        \        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+P+/HgAFhAJ/wlseKgAAAABJRU5ErkJggg==', \
+        \        '2021-03-15 00:00:00.000000 +00:00', \
+        \        '2021-03-15 00:00:00.000000 +00:00');"
   let action conn = execute_ conn sql
   liftIO $ withResource dbPool action
   return ()

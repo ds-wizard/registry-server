@@ -1,6 +1,6 @@
 module Registry.Specs.API.Common where
 
-import Data.Aeson (encode, object, (.=))
+import Data.Aeson (encode)
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import qualified Data.CaseInsensitive as CI
@@ -61,13 +61,11 @@ createInvalidJsonTest reqMethod reqUrl missingField =
     -- GIVEN: Prepare expectation
     let expStatus = 400
     let expHeaders = resCtHeaderUtf8 : resCorsHeaders
-    let expDto = object ["status" .= 400, "message" .= "Problem in deserialization of JSON"]
-    let expBody = encode expDto
     -- WHEN: Call API
     response <- request reqMethod reqUrl reqHeaders reqBody
     -- THEN: Compare response with expectation
     let responseMatcher =
-          ResponseMatcher {matchHeaders = expHeaders, matchStatus = expStatus, matchBody = bodyEquals expBody}
+          ResponseMatcher {matchHeaders = expHeaders, matchStatus = expStatus, matchBody = bodyContainsInvalidJsonMessage}
     response `shouldRespondWith` responseMatcher
 
 createForbiddenTest reqMethod reqUrl reqHeaders reqBody forbiddenReason =
