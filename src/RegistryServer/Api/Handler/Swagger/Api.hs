@@ -31,12 +31,13 @@ import Shared.Api.Resource.DocumentTemplateBundle.DocumentTemplateBundleSM ()
 import Shared.Api.Resource.Info.InfoSM ()
 import Shared.Api.Resource.KnowledgeModel.Bundle.KnowledgeModelBundlePackageSM ()
 import Shared.Api.Resource.KnowledgeModel.Bundle.KnowledgeModelBundleSM ()
+import Shared.Util.Swagger (normalizeSwagger)
 
 type SwaggerAPI = SwaggerSchemaUI "swagger-ui" "swagger.json"
 
 swagger :: String -> Swagger
 swagger version =
-  let s = toSwagger applicationApi
+  let s = normalizeSwagger (toSwagger applicationApi)
    in s
         { _swaggerInfo =
             s._swaggerInfo
