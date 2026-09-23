@@ -31,7 +31,7 @@ runPersistentCommands' :: RequestContextM ()
 runPersistentCommands' = runPersistentCommands runRequestContextWithRequestContext' updateContext execute components
 
 runPersistentCommandChannelListener' :: RequestContextM ()
-runPersistentCommandChannelListener' = runPersistentCommandChannelListener runRequestContextWithRequestContext' updateContext execute components
+runPersistentCommandChannelListener' = runPersistentCommandChannelListener runPersistentCommands'
 
 updateContext :: PersistentCommandSimple String -> RequestContext -> RequestContextM RequestContext
 updateContext commandSimple = return
