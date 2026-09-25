@@ -37,7 +37,7 @@ getSimplePackagesFiltered queryParams mMetamodelVersion headers =
 
 getPackageByCoordinate :: Coordinate -> RequestContextM KnowledgeModelPackageDetailDTO
 getPackageByCoordinate coordinate = do
-  pkg <- resolvePackageCoordinate coordinate
+  pkg <- resolvePackageCoordinate coordinate Nothing
   versions <- getPackageVersions pkg
   org <- findOrganizationByOrgId pkg.organizationId
   return $ toDetailDTO pkg versions org
@@ -47,5 +47,5 @@ getPackageByCoordinate coordinate = do
 -- --------------------------------
 getPackageVersions :: KnowledgeModelPackage -> RequestContextM [String]
 getPackageVersions pkg = do
-  allPkgs <- findPackagesByOrganizationIdAndKmId pkg.organizationId pkg.kmId
+  allPkgs <- findPackagesByOrganizationIdAndKmId pkg.organizationId pkg.kmId Nothing
   return . L.sort . fmap (.version) $ allPkgs

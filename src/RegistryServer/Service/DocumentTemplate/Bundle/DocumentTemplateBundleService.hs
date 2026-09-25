@@ -30,7 +30,7 @@ import Shared.Util.Uuid
 exportBundle :: Coordinate -> RequestContextM BSL.ByteString
 exportBundle documentTemplateId = do
   _ <- auditGetDocumentTemplateBundle documentTemplateId
-  dt <- resolveDocumentTemplateCoordinate documentTemplateId
+  dt <- resolveDocumentTemplateCoordinate documentTemplateId Nothing
   formats <- findDocumentTemplateFormats dt.uuid
   files <- findFilesByDocumentTemplateUuid dt.uuid
   assets <- findAssetsByDocumentTemplateUuid dt.uuid
@@ -44,7 +44,7 @@ importBundle contentS = do
     Right (bundle, assetContents) -> do
       uuid <- liftIO generateUuid
       let tenantUuid = U.nil
-      let dt = fromBundle bundle uuid tenantUuid
+      let dt = fromBundle bundle uuid tenantUuid Nothing
       traverse_ (\(a, content) -> putAsset dt.uuid a.uuid a.contentType content) assetContents
       insertDocumentTemplate dt
       traverse_ (insertDocumentTemplateFormat . fromFormatDTO dt.uuid tenantUuid dt.createdAt dt.updatedAt) bundle.formats

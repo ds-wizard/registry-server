@@ -21,7 +21,7 @@ getDocumentTemplates queryParams mMetamodelVersion = do
 
 getDocumentTemplateByCoordinate :: Coordinate -> RequestContextM DocumentTemplateDetailDTO
 getDocumentTemplateByCoordinate coordinate = do
-  tml <- findDocumentTemplateByCoordinate coordinate
+  tml <- findDocumentTemplateByCoordinate coordinate Nothing
   versions <- getDocumentTemplateVersions tml
   org <- findOrganizationByOrgId tml.organizationId
   return $ toDetailDTO tml versions org
@@ -31,5 +31,5 @@ getDocumentTemplateByCoordinate coordinate = do
 -- --------------------------------
 getDocumentTemplateVersions :: DocumentTemplate -> RequestContextM [String]
 getDocumentTemplateVersions tml = do
-  allTmls <- findDocumentTemplatesByOrganizationIdAndKmId tml.organizationId tml.templateId
+  allTmls <- findDocumentTemplatesByOrganizationIdAndKmId tml.organizationId tml.templateId Nothing
   return . fmap (.version) $ allTmls

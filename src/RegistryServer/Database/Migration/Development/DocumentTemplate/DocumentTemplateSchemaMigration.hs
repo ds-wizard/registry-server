@@ -53,6 +53,7 @@ createTemplateTable = do
         \    non_editable      boolean          NOT NULL, \
         \    language          varchar          NOT NULL, \
         \    pot_file_ready    boolean          NOT NULL, \
+        \    workspace_uuid    uuid, \
         \    CONSTRAINT document_template_pk PRIMARY KEY (uuid) \
         \); \
         \ \

@@ -38,7 +38,7 @@ import Shared.Util.Uuid
 exportBundle :: Coordinate -> RequestContextM R_KnowledgeModelBundle.KnowledgeModelBundle
 exportBundle coordinate = do
   _ <- auditGetKnowledgeModelBundle coordinate
-  resolvedPb <- resolvePackageCoordinate coordinate
+  resolvedPb <- resolvePackageCoordinate coordinate Nothing
   packages <- findSeriesOfPackagesRecursiveByUuid resolvedPb.uuid
   case lastSafe packages of
     Just newestPackage -> do
@@ -74,17 +74,17 @@ importBundle pb =
 importPackage :: KnowledgeModelBundlePackage -> RequestContextM ()
 importPackage dto =
   runInTransaction $ do
-    eitherPackage <- findPackageByCoordinate' (createCoordinate dto)
+    eitherPackage <- findPackageByCoordinate' (createCoordinate dto) Nothing
     case eitherPackage of
       Nothing -> do
         pkgUuid <- liftIO generateUuid
         mPreviousPackageUuid <-
           case dto.previousPackageId of
             Just previousPackageId -> do
-              previousPackage <- findPackageByCoordinate previousPackageId
+              previousPackage <- findPackageByCoordinate previousPackageId Nothing
               return . Just $ previousPackage.uuid
             Nothing -> return Nothing
-        let (pkg, pkgEvents) = PM.fromKnowledgeModelBundlePackage dto pkgUuid mPreviousPackageUuid U.nil
+        let (pkg, pkgEvents) = PM.fromKnowledgeModelBundlePackage dto pkgUuid mPreviousPackageUuid U.nil Nothing
         insertPackage pkg
         traverse_ insertPackageEvent pkgEvents
       Just _ -> return ()

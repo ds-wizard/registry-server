@@ -46,6 +46,7 @@ createKnowledgeModelPackageTable = do
         \    non_editable                bool        NOT NULL, \
         \    public                      bool        NOT NULL, \
         \    language                    varchar     NOT NULL DEFAULT 'en', \
+        \    workspace_uuid              uuid, \
         \    CONSTRAINT knowledge_model_package_pk PRIMARY KEY (uuid) \
         \); \
         \ \
