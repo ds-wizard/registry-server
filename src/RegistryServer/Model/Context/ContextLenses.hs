@@ -109,3 +109,5 @@ instance AclContext RequestContextM where
   checkPermissionsAny perms = return ()
   checkPermissionsAll perms = return ()
   hasPermission perm = return True
+  hasPermissionInWorkspace perm _ = return True
+  checkPermissionInWorkspace perm _ = return ()
