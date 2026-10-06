@@ -2,8 +2,6 @@ module RegistryServer.Api.Resource.KnowledgeModel.Package.KnowledgeModelPackageD
 
 import Data.Swagger
 
-import RegistryPublic.Api.Resource.Organization.OrganizationSimpleSM ()
-import RegistryPublic.Database.Migration.Development.Organization.Data.Organizations
 import RegistryServer.Api.Resource.KnowledgeModel.Package.KnowledgeModelPackageDetailDTO
 import RegistryServer.Api.Resource.KnowledgeModel.Package.KnowledgeModelPackageDetailJM ()
 import RegistryServer.Service.KnowledgeModel.Package.KnowledgeModelPackageMapper
@@ -13,4 +11,4 @@ import Shared.Database.Migration.Development.KnowledgeModel.Data.Package.Knowled
 import Shared.Util.Swagger
 
 instance ToSchema KnowledgeModelPackageDetailDTO where
-  declareNamedSchema = toSwagger (toDetailDTO globalKmPackage [] orgGlobal)
+  declareNamedSchema = toSwagger (toDetailDTO globalKmPackage [])

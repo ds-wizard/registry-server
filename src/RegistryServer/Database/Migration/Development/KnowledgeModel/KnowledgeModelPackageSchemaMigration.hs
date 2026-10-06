@@ -30,8 +30,7 @@ createKnowledgeModelPackageTable = do
         \( \
         \    uuid                        uuid        NOT NULL, \
         \    name                        varchar     NOT NULL, \
-        \    organization_id             varchar     NOT NULL, \
-        \    km_id                       varchar     NOT NULL, \
+        \    id                          varchar     NOT NULL, \
         \    version                     varchar     NOT NULL, \
         \    metamodel_version           integer     NOT NULL, \
         \    description                 varchar     NOT NULL, \
@@ -46,10 +45,13 @@ createKnowledgeModelPackageTable = do
         \    non_editable                bool        NOT NULL, \
         \    public                      bool        NOT NULL, \
         \    language                    varchar     NOT NULL DEFAULT 'en', \
+        \    workspace_uuid              uuid, \
+        \    fork_of_package_version     varchar, \
+        \    merge_checkpoint_package_version varchar, \
         \    CONSTRAINT knowledge_model_package_pk PRIMARY KEY (uuid) \
         \); \
         \ \
-        \CREATE INDEX knowledge_model_package_organization_id_km_id_index ON knowledge_model_package (organization_id, km_id); \
+        \CREATE INDEX knowledge_model_package_id_index ON knowledge_model_package (id); \
         \ \
         \CREATE INDEX knowledge_model_package_previous_package_id_index ON knowledge_model_package (previous_package_uuid);"
   let action conn = execute_ conn sql

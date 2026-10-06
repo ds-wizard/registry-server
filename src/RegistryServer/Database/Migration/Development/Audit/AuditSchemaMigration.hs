@@ -22,7 +22,7 @@ createTables = do
         "CREATE TABLE audit \
         \( \
         \    type                           varchar     NOT NULL, \
-        \    organization_id                varchar     NOT NULL, \
+        \    user_uuid                      uuid, \
         \    created_at                     timestamptz NOT NULL, \
         \    user_count                     int, \
         \    knowledge_model_package_count  int, \
@@ -30,9 +30,9 @@ createTables = do
         \    project_count                  int, \
         \    document_template_count        int, \
         \    document_count                 int, \
-        \    knowledge_model_package_id     varchar, \
-        \    document_template_uuid           varchar, \
-        \    locale_id                      varchar \
+        \    knowledge_model_package_reference varchar, \
+        \    document_template_reference       varchar, \
+        \    locale_reference                  varchar \
         \);"
   let action conn = execute_ conn sql
   runDB action

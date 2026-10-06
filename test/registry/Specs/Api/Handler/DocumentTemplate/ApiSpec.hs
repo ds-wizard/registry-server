@@ -7,6 +7,7 @@ import Specs.Api.Handler.Common
 
 import Specs.Api.Handler.DocumentTemplate.Detail_Bundle_GET
 import Specs.Api.Handler.DocumentTemplate.Detail_GET
+import Specs.Api.Handler.DocumentTemplate.List_Bundle_POST
 import Specs.Api.Handler.DocumentTemplate.List_GET
 
 templateAPI serverContext requestContext =
@@ -15,3 +16,4 @@ templateAPI serverContext requestContext =
       list_GET requestContext
       detail_GET requestContext
       detail_bundle_GET requestContext
+      list_bundle_POST requestContext

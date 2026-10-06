@@ -1,11 +1,13 @@
 module Specs.Api.Handler.Common where
 
-import Data.Aeson (encode)
+import Data.Aeson (Key, Object, Value (..), encode)
+import qualified Data.Aeson.KeyMap as KM
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import qualified Data.CaseInsensitive as CI
 import Data.Either (isRight)
 import qualified Data.List as L
+import qualified Data.Text as T
 import Network.HTTP.Types
 import Network.Wai (Application)
 import Servant (serve)
@@ -40,6 +42,45 @@ reqAdminAuthHeader = ("Authorization", "Bearer GlobalToken")
 
 reqUserAuthHeader :: Header
 reqUserAuthHeader = ("Authorization", "Bearer NetherlandsToken")
+
+boundary :: String
+boundary = "X-TEST-BOUNDARY"
+
+reqCtMultipartHeader :: Header
+reqCtMultipartHeader = ("Content-Type", BS.pack $ "multipart/form-data; boundary=" ++ boundary)
+
+createMultipartBody :: String -> String -> BSL.ByteString -> BSL.ByteString
+createMultipartBody fileName contentType content =
+  BSL.concat
+    [ BSL.pack $ "--" ++ boundary ++ "\r\n"
+    , BSL.pack $ "Content-Disposition: form-data; name=\"file\"; filename=\"" ++ fileName ++ "\"\r\n"
+    , BSL.pack $ "Content-Type: " ++ contentType ++ "\r\n\r\n"
+    , content
+    , BSL.pack "\r\n"
+    , BSL.pack $ "--" ++ boundary ++ "--\r\n"
+    ]
+
+adjustKey :: Key -> (Value -> Value) -> Object -> Object
+adjustKey key f = KM.mapWithKey (\k v -> if k == key then f v else v)
+
+toLegacyIdFields :: Key -> Key -> Object -> Object
+toLegacyIdFields organizationKey entityKey o =
+  case KM.lookup "id" o of
+    Just (String id) ->
+      let (organizationId, entityId) = T.breakOnEnd "." id
+       in KM.insert organizationKey (String (T.dropEnd 1 organizationId)) . KM.insert entityKey (String entityId) . KM.delete "id" $ o
+    _ -> o
+
+toLegacyReferenceField :: Key -> Object -> Object
+toLegacyReferenceField prefix o =
+  case (KM.lookup idKey o, KM.lookup versionKey o) of
+    (Just (String id), Just (String version)) ->
+      let (organizationId, entityId) = T.breakOnEnd "." id
+       in KM.insert idKey (String (T.intercalate ":" [T.dropEnd 1 organizationId, entityId, version])) . KM.delete versionKey $ o
+    _ -> o
+  where
+    idKey = prefix <> "Id"
+    versionKey = prefix <> "Version"
 
 reqStatisticsHeader :: [Header]
 reqStatisticsHeader =

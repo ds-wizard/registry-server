@@ -10,7 +10,6 @@ import Test.Hspec
 import Test.Hspec.Wai hiding (shouldRespondWith)
 import Test.Hspec.Wai.Matcher
 
-import RegistryPublic.Database.Migration.Development.Organization.Data.Organizations
 import RegistryServer.Api.Resource.KnowledgeModel.Package.KnowledgeModelPackageDetailJM ()
 import RegistryServer.Model.Context.RequestContext
 import RegistryServer.Service.KnowledgeModel.Package.KnowledgeModelPackageMapper
@@ -21,11 +20,11 @@ import Shared.Model.KnowledgeModel.Package.KnowledgeModelPackage ()
 import SharedTest.Specs.Api.Common
 
 -- ------------------------------------------------------------------------
--- GET /knowledge-model-packages/{pkgId}
+-- GET /api/knowledge-model-packages/{pkgId}
 -- ------------------------------------------------------------------------
 detail_GET :: RequestContext -> SpecWith ((), Application)
 detail_GET requestContext =
-  describe "GET /knowledge-model-packages/{pkgId}" $ do
+  describe "GET /api/knowledge-model-packages/{pkgId}" $ do
     test_200 requestContext
     test_404 requestContext
 
@@ -34,7 +33,7 @@ detail_GET requestContext =
 -- ----------------------------------------------------
 reqMethod = methodGet
 
-reqUrl = BS.pack $ "/knowledge-model-packages/" ++ show (createCoordinate netherlandsKmPackageV2)
+reqUrl = BS.pack $ "/api/knowledge-model-packages/" ++ show (createCoordinate netherlandsKmPackageV2)
 
 reqHeaders = [reqCtHeader]
 
@@ -49,7 +48,7 @@ test_200 requestContext =
     do
       let expStatus = 200
       let expHeaders = resCtHeader : resCorsHeaders
-      let expDto = toDetailDTO netherlandsKmPackageV2 ["1.0.0", "2.0.0"] orgNetherlands
+      let expDto = toDetailDTO netherlandsKmPackageV2 ["1.0.0", "2.0.0"]
       let expBody = encode expDto
       -- WHEN: Call API
       response <- request reqMethod reqUrl reqHeaders reqBody
@@ -64,8 +63,8 @@ test_200 requestContext =
 test_404 requestContext =
   createNotFoundTest'
     reqMethod
-    "/knowledge-model-packages/global:non-existing-km-package:1.0.0"
+    "/api/knowledge-model-packages/global.non-existing-km-package:1.0.0"
     reqHeaders
     reqBody
     "knowledge_model_package"
-    [("organization_id", "global"), ("km_id", "non-existing-km-package"), ("version", "1.0.0")]
+    [("id", "global.non-existing-km-package"), ("version", "1.0.0")]

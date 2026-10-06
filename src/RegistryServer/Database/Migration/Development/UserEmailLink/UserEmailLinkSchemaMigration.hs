@@ -27,8 +27,7 @@ createTables = do
         \    hash        varchar                  NOT NULL, \
         \    created_at  timestamptz NOT NULL, \
         \    tenant_uuid uuid                     NOT NULL, \
-        \    CONSTRAINT user_email_link_pk PRIMARY KEY (uuid, tenant_uuid), \
-        \    CONSTRAINT user_email_link_identity_fk FOREIGN KEY (identity) REFERENCES organization (organization_id) ON DELETE CASCADE \
+        \    CONSTRAINT user_email_link_pk PRIMARY KEY (uuid, tenant_uuid) \
         \); \
         \ \
         \CREATE UNIQUE INDEX user_email_link_hash_uindex ON user_email_link (hash);"

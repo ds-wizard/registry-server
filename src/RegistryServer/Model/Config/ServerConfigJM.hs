@@ -18,6 +18,7 @@ instance FromJSON ServerConfig where
     logging <- o .:? "logging" .!= defaultLogging
     cloud <- o .:? "cloud" .!= defaultCloud
     persistentCommand <- o .:? "persistentCommand" .!= defaultPersistentCommand
+    userEmailLink <- o .:? "userEmailLink" .!= defaultUserEmailLink
     return ServerConfig {..}
   parseJSON _ = mzero
 

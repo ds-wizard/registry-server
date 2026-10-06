@@ -6,7 +6,7 @@ import Data.IORef (newIORef)
 import Data.Pool
 import Data.Time
 
-import RegistryPublic.Database.Migration.Development.Organization.Data.Organizations
+import RegistryServer.Database.Migration.Development.User.Data.Users
 import RegistryServer.Model.Config.ServerConfig
 import RegistryServer.Model.Context.RequestContext
 import RegistryServer.Model.Context.ServerContext
@@ -17,17 +17,17 @@ import Shared.Util.Uuid
 
 runRequestContextWithServerContext :: RequestContextM a -> ServerContext -> IO (Either String a)
 runRequestContextWithServerContext function serverContext =
-  requestContextFromServerContext (Just orgGlobal) Transactional serverContext $
+  requestContextFromServerContext (Just userAdmin) Transactional serverContext $
     runRequestContextWithRequestContext function
 
 runRequestContextWithServerContext'' :: RequestContextM a -> ServerContext -> IO (Either String a)
 runRequestContextWithServerContext'' function serverContext =
-  requestContextFromServerContext (Just orgGlobal) NoTransaction serverContext $
+  requestContextFromServerContext (Just userAdmin) NoTransaction serverContext $
     runRequestContextWithRequestContext function
 
 runRequestContextWithRequestContext :: RequestContextM a -> RequestContext -> IO (Either String a)
 runRequestContextWithRequestContext function requestContext = do
-  eResult <- liftIO $ runMonads (runRequestContextM function) requestContext
+  eResult <- liftIO $ runMonads function.runRequestContextM requestContext
   case eResult of
     Right result -> return . Right $ result
     Left error ->
@@ -39,7 +39,7 @@ runRequestContextWithRequestContext' :: RequestContextM a -> RequestContext -> I
 runRequestContextWithRequestContext' function requestContext =
   withResource requestContext.dbPool $ \dbConn -> do
     let updatedRequestContext = requestContext {dbConnection = Just dbConn}
-    eResult <- liftIO $ runMonads (runRequestContextM function) updatedRequestContext
+    eResult <- liftIO $ runMonads function.runRequestContextM updatedRequestContext
     case eResult of
       Right result -> return . Right $ result
       Left error ->
@@ -53,7 +53,7 @@ runLogging' context =
   let loggingLevel = context.serverConfig.logging.level
    in runLogging loggingLevel
 
-requestContextFromServerContext currentOrganization transactionState serverContext callback = do
+requestContextFromServerContext currentUser transactionState serverContext callback = do
   cTraceUuid <- generateUuid
   cBreadcrumbs <- liftIO (newIORef [])
   now <- liftIO getCurrentTime
@@ -67,7 +67,7 @@ requestContextFromServerContext currentOrganization transactionState serverConte
           , httpClientManager = serverContext.httpClientManager
           , traceUuid = cTraceUuid
           , breadcrumbs = cBreadcrumbs
-          , currentOrganization = currentOrganization
+          , currentUser = currentUser
           }
   case transactionState of
     Transactional -> do

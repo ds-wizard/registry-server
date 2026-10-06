@@ -4,7 +4,7 @@ module RegistryServer.Service.KnowledgeModel.Package.KnowledgeModelPackageValida
 
 import Shared.Localization.Messages.KnowledgeModel.Public
 import Shared.Model.Error.Error
-import Shared.Util.Coordinate
+import Shared.Util.Reference
 
 validateIsVersionHigher :: String -> String -> Maybe AppError
 validateIsVersionHigher newVersion oldVersion =

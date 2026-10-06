@@ -10,9 +10,10 @@ import qualified RegistryServer.Database.Migration.Development.KnowledgeModel.Kn
 import qualified RegistryServer.Database.Migration.Development.KnowledgeModel.KnowledgeModelPackageSchemaMigration as KnowledgeModelPackage
 import qualified RegistryServer.Database.Migration.Development.Locale.LocaleMigration as Locale
 import qualified RegistryServer.Database.Migration.Development.Locale.LocaleSchemaMigration as Locale
-import qualified RegistryServer.Database.Migration.Development.Organization.OrganizationMigration as Organization
-import qualified RegistryServer.Database.Migration.Development.Organization.OrganizationSchemaMigration as Organization
 import qualified RegistryServer.Database.Migration.Development.PersistentCommand.PersistentCommandSchemaMigration as PersistentCommand
+import qualified RegistryServer.Database.Migration.Development.Publication.PublicationSchemaMigration as Publication
+import qualified RegistryServer.Database.Migration.Development.User.UserMigration as User
+import qualified RegistryServer.Database.Migration.Development.User.UserSchemaMigration as User
 import qualified RegistryServer.Database.Migration.Development.UserEmailLink.UserEmailLinkSchemaMigration as UserEmailLink
 import RegistryServer.Model.Context.ContextMappers
 import qualified Shared.Database.Migration.Development.Component.ComponentMigration as Component
@@ -26,19 +27,20 @@ runMigration = runRequestContextWithServerContext $ do
   Common.dropFunctions
   -- 2. Drop schema
   Component.dropTables
+  Publication.dropTables
   Locale.dropTables
   PersistentCommand.dropTables
   DocumentTemplate.dropTables
   Audit.dropTables
   UserEmailLink.dropTables
   KnowledgeModelPackage.dropTables
-  Organization.dropTables
+  User.dropTables
   -- 3. Drop DB types
   Common.dropTypes
   -- 4. Create DB types
   Common.createTypes
   -- 5. Create schema
-  Organization.createTables
+  User.createTables
   KnowledgeModelPackage.createTables
   UserEmailLink.createTables
   Audit.createTables
@@ -46,10 +48,11 @@ runMigration = runRequestContextWithServerContext $ do
   PersistentCommand.createTables
   Locale.createTables
   Component.createTables
+  Publication.createTables
   -- 6. Create DB functions
   Common.createFunctions
   -- 7. Load fixtures
-  Organization.runMigration
+  User.runMigration
   KnowledgeModelPackage.runMigration
   DocumentTemplate.runMigration
   PersistentCommand.runMigration

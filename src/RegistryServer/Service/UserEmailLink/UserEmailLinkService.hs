@@ -13,14 +13,14 @@ import Shared.Model.UserEmailLink.UserEmailLink
 import Shared.Util.Uuid
 
 createUserEmailLink :: String -> UserEmailLinkType -> RequestContextM (UserEmailLink String UserEmailLinkType)
-createUserEmailLink orgId actionType = do
+createUserEmailLink identity actionType = do
   uuid <- liftIO generateUuid
   hash <- liftIO generateUuid
   now <- liftIO getCurrentTime
   let userEmailLink =
         UserEmailLink
           { uuid = uuid
-          , identity = orgId
+          , identity = identity
           , aType = actionType
           , hash = U.toString hash
           , tenantUuid = U.nil

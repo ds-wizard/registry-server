@@ -6,11 +6,11 @@ module RegistryServer.Localization.Messages.Internal where
 -- Knowledge Model Bundle
 _ERROR_SERVICE_KMB__MAIN_PKG_ABSENCE = "Knowledge Model Bundle doesn't contain main package"
 
--- Organization
-_ERROR_SERVICE_ORGANIZATION__ACTIVATION_EMAIL_NOT_SENT =
+-- User
+_ERROR_SERVICE_USER__ACTIVATION_EMAIL_NOT_SENT =
   "The activation email could not be sent. Please contact administrator."
 
-_ERROR_SERVICE_ORGANIZATION__RECOVERY_EMAIL_NOT_SENT =
+_ERROR_SERVICE_USER__RECOVERY_EMAIL_NOT_SENT =
   "The recovery email could not be sent. Please contact administrator."
 
 -- Package

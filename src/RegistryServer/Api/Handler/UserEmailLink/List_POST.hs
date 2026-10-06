@@ -7,7 +7,7 @@ import RegistryServer.Api.Resource.UserEmailLink.UserEmailLinkJM ()
 import RegistryServer.Model.Context.ContextLenses ()
 import RegistryServer.Model.Context.ServerContext
 import RegistryServer.Model.UserEmailLink.UserEmailLinkType
-import RegistryServer.Service.Organization.OrganizationService
+import RegistryServer.Service.User.UserService
 import Shared.Api.Handler.Common
 import Shared.Api.Resource.UserEmailLink.UserEmailLinkDTO
 import Shared.Api.Resource.UserEmailLink.UserEmailLinkJM ()
@@ -22,5 +22,5 @@ list_POST :: UserEmailLinkDTO UserEmailLinkType -> ServerContextM (Headers '[Hea
 list_POST reqDto =
   runInUnauthService Transactional $
     addTraceUuidHeader =<< do
-      resetOrganizationToken reqDto
+      resetUserPassword reqDto
       return NoContent

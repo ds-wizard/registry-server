@@ -21,11 +21,11 @@ import SharedTest.Specs.Api.Common
 import Specs.Common
 
 -- ------------------------------------------------------------------------
--- GET /document-templates/{documentTemplateId}
+-- GET /api/document-templates/{documentTemplateId}
 -- ------------------------------------------------------------------------
 detail_GET :: RequestContext -> SpecWith ((), Application)
 detail_GET requestContext =
-  describe "GET /document-templates/{documentTemplateId}" $ do
+  describe "GET /api/document-templates/{documentTemplateId}" $ do
     test_200 requestContext
     test_404 requestContext
 
@@ -34,7 +34,7 @@ detail_GET requestContext =
 -- ----------------------------------------------------
 reqMethod = methodGet
 
-reqUrl = BS.pack $ "/document-templates/" ++ show (createCoordinate wizardDocumentTemplate)
+reqUrl = BS.pack $ "/api/document-templates/" ++ show (createCoordinate wizardDocumentTemplate)
 
 reqHeaders = [reqCtHeader]
 
@@ -66,8 +66,8 @@ test_200 requestContext =
 test_404 requestContext =
   createNotFoundTest'
     reqMethod
-    "/document-templates/global:non-existing-dt:1.0.0"
+    "/api/document-templates/global.non-existing-dt:1.0.0"
     reqHeaders
     reqBody
     "document_template"
-    [("organization_id", "global"), ("template_id", "non-existing-dt"), ("version", "1.0.0")]
+    [("id", "global.non-existing-dt"), ("version", "1.0.0")]

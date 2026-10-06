@@ -11,10 +11,8 @@ import Shared.Util.Aeson
 instance ToJSON DocumentTemplateBundleDTO where
   toJSON DocumentTemplateBundleDTO {..} =
     object
-      [ "id" .= tId
+      [ "id" .= id
       , "name" .= name
-      , "organizationId" .= organizationId
-      , "templateId" .= templateId
       , "version" .= version
       , "metamodelVersion" .= metamodelVersion
       , "description" .= description

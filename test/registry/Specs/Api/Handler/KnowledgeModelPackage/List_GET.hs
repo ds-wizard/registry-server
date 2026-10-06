@@ -9,7 +9,6 @@ import Test.Hspec
 import Test.Hspec.Wai hiding (shouldRespondWith)
 import Test.Hspec.Wai.Matcher
 
-import RegistryPublic.Database.Migration.Development.Organization.Data.Organizations
 import RegistryServer.Database.DAO.Audit.AuditEntryDAO
 import RegistryServer.Database.Migration.Development.Audit.Data.AuditEntries
 import RegistryServer.Model.Context.RequestContext
@@ -21,17 +20,17 @@ import Specs.Api.Handler.Audit.Common
 import Specs.Api.Handler.Common
 
 -- ------------------------------------------------------------------------
--- GET /knowledge-model-packages
+-- GET /api/knowledge-model-packages
 -- ------------------------------------------------------------------------
 list_GET :: RequestContext -> SpecWith ((), Application)
-list_GET requestContext = describe "GET /knowledge-model-packages" $ test_200 requestContext
+list_GET requestContext = describe "GET /api/knowledge-model-packages" $ test_200 requestContext
 
 -- ----------------------------------------------------
 -- ----------------------------------------------------
 -- ----------------------------------------------------
 reqMethod = methodGet
 
-reqUrl = "/knowledge-model-packages"
+reqUrl = "/api/knowledge-model-packages"
 
 reqHeaders = [reqCtHeader]
 
@@ -47,7 +46,7 @@ test_200 requestContext = do
       let expStatus = 200
       let expHeaders = resCtHeader : resCorsHeaders
       let expDto =
-            [toSimpleDTO globalKmPackage orgGlobal, toSimpleDTO netherlandsKmPackageV2 orgNetherlands]
+            [toSimpleDTO globalKmPackage, toSimpleDTO netherlandsKmPackageV2]
       let expBody = encode expDto
       -- WHEN: Call API
       response <- request reqMethod reqUrl reqHeaders reqBody
@@ -65,7 +64,7 @@ test_200 requestContext = do
       let expStatus = 200
       let expHeaders = resCtHeader : resCorsHeaders
       let expDto =
-            [toSimpleDTO globalKmPackage orgGlobal, toSimpleDTO netherlandsKmPackageV2 orgNetherlands]
+            [toSimpleDTO globalKmPackage, toSimpleDTO netherlandsKmPackageV2]
       let expBody = encode expDto
       -- WHEN: Call API
       response <- request reqMethod reqUrl reqHeaders reqBody

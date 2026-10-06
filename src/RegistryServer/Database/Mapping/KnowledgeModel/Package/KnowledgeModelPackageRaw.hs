@@ -5,24 +5,22 @@ import Database.PostgreSQL.Simple.FromField
 import Database.PostgreSQL.Simple.FromRow
 
 import RegistryServer.Model.KnowledgeModel.Package.KnowledgeModelPackageRaw
-import Shared.Database.Mapping.Coordinate.Coordinate ()
+import Shared.Database.Mapping.Coordinate.Coordinate
 import Shared.Database.Mapping.KnowledgeModel.Package.KnowledgeModelPackagePhase ()
 
 instance FromRow KnowledgeModelPackageRaw where
   fromRow = do
-    pId <- field
+    id <- field
     name <- field
-    organizationId <- field
-    kmId <- field
     version <- field
     phase <- field
     metamodelVersion <- field
     description <- field
     readme <- field
     license <- field
-    previousPackageId <- field
-    forkOfPackageId <- field
-    mergeCheckpointPackageId <- field
+    previousPackageId <- coordinateFromFields
+    forkOfPackageId <- coordinateFromFields
+    mergeCheckpointPackageId <- coordinateFromFields
     events <- fieldWith fromJSONField
     nonEditable <- field
     createdAt <- field

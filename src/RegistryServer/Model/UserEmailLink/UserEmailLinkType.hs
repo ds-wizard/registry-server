@@ -4,5 +4,5 @@ import GHC.Generics
 
 data UserEmailLinkType
   = RegistrationUserEmailLinkType
-  | ForgottenTokenUserEmailLinkType
+  | ForgottenPasswordUserEmailLinkType
   deriving (Show, Eq, Generic, Read)

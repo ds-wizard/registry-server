@@ -1,19 +1,19 @@
 module RegistryServer.Service.Mail.Mailer (
   sendRegistrationConfirmationMail,
   sendRegistrationCreatedAnalyticsMail,
-  sendResetTokenMail,
+  sendResetPasswordMail,
 ) where
 
 import Control.Monad.Reader (asks, liftIO)
-import Data.Aeson (ToJSON)
+import Data.Aeson (ToJSON, Value)
 import qualified Data.Map.Strict as M
 import Data.Time
 import qualified Data.UUID as U
 
-import RegistryPublic.Api.Resource.Organization.OrganizationDTO
 import RegistryServer.Database.DAO.Common
 import RegistryServer.Model.Config.ServerConfig
 import RegistryServer.Model.Context.RequestContext
+import RegistryServer.Model.User.User
 import Shared.Database.DAO.PersistentCommand.PersistentCommandDAO
 import Shared.Model.Config.ServerConfig
 import qualified Shared.Model.PersistentCommand.Mail.MailCommand as MC
@@ -22,78 +22,51 @@ import qualified Shared.Util.Aeson as A
 import Shared.Util.JSON
 import Shared.Util.Uuid
 
-sendRegistrationConfirmationMail :: OrganizationDTO -> String -> Maybe String -> RequestContextM ()
-sendRegistrationConfirmationMail org hash mCallbackUrl = do
-  serverConfig <- asks serverConfig
-  let clientAddress = serverConfig.general.clientUrl
-  runInTransaction $ do
-    let body =
-          MC.MailCommand
-            { mode = "registry"
-            , template = "registrationConfirmation"
-            , recipients = [MC.MailRecipient {uuid = Nothing, email = org.email}]
-            , parameters =
-                M.fromList
-                  [ ("organizationId", A.string org.organizationId)
-                  , ("organizationName", A.string org.name)
-                  , ("organizationEmail", A.string org.email)
-                  , ("hash", A.string hash)
-                  , ("clientUrl", A.string clientAddress)
-                  , ("callbackUrl", A.maybeString mCallbackUrl)
-                  ]
-            }
-    sendEmail body org.organizationId
+sendRegistrationConfirmationMail :: User -> String -> RequestContextM ()
+sendRegistrationConfirmationMail user hash = do
+  serverConfig <- asks (.serverConfig)
+  let parameters = userParameters user serverConfig ++ [("hash", A.string hash)]
+  sendEmail (toMailCommand "registrationConfirmation" user.email parameters) user
 
-sendRegistrationCreatedAnalyticsMail :: OrganizationDTO -> RequestContextM ()
-sendRegistrationCreatedAnalyticsMail org =
-  runInTransaction $ do
-    serverConfig <- asks serverConfig
-    let clientAddress = serverConfig.general.clientUrl
-    let body =
-          MC.MailCommand
-            { mode = "registry"
-            , template = "registrationCreatedAnalytics"
-            , recipients = [MC.MailRecipient {uuid = Nothing, email = serverConfig.analyticalMails.email}]
-            , parameters =
-                M.fromList
-                  [ ("organizationId", A.string org.organizationId)
-                  , ("organizationName", A.string org.name)
-                  , ("organizationEmail", A.string org.email)
-                  , ("clientUrl", A.string clientAddress)
-                  ]
-            }
-    sendEmail body org.organizationId
+sendRegistrationCreatedAnalyticsMail :: User -> RequestContextM ()
+sendRegistrationCreatedAnalyticsMail user = do
+  serverConfig <- asks (.serverConfig)
+  let parameters = userParameters user serverConfig
+  sendEmail (toMailCommand "registrationCreatedAnalytics" serverConfig.analyticalMails.email parameters) user
 
-sendResetTokenMail :: OrganizationDTO -> String -> RequestContextM ()
-sendResetTokenMail org hash =
-  runInTransaction $ do
-    serverConfig <- asks serverConfig
-    let clientAddress = serverConfig.general.clientUrl
-    let body =
-          MC.MailCommand
-            { mode = "registry"
-            , template = "resetToken"
-            , recipients = [MC.MailRecipient {uuid = Nothing, email = org.email}]
-            , parameters =
-                M.fromList
-                  [ ("organizationId", A.string org.organizationId)
-                  , ("organizationName", A.string org.name)
-                  , ("organizationEmail", A.string org.email)
-                  , ("hash", A.string hash)
-                  , ("clientUrl", A.string clientAddress)
-                  ]
-            }
-    sendEmail body org.organizationId
+sendResetPasswordMail :: User -> String -> RequestContextM ()
+sendResetPasswordMail user hash = do
+  serverConfig <- asks (.serverConfig)
+  let parameters = userParameters user serverConfig ++ [("hash", A.string hash)]
+  sendEmail (toMailCommand "resetPassword" user.email parameters) user
 
 -- --------------------------------
 -- PRIVATE
 -- --------------------------------
-sendEmail :: ToJSON dto => dto -> String -> RequestContextM ()
-sendEmail dto createdBy = do
+toMailCommand :: String -> String -> [(String, Value)] -> MC.MailCommand
+toMailCommand template email parameters =
+  MC.MailCommand
+    { mode = "registry"
+    , template = template
+    , recipients = [MC.MailRecipient {uuid = Nothing, email = email}]
+    , parameters = M.fromList parameters
+    }
+
+userParameters :: User -> ServerConfig -> [(String, Value)]
+userParameters user serverConfig =
+  [ ("userUuid", A.string . U.toString $ user.uuid)
+  , ("userFirstName", A.string user.firstName)
+  , ("userLastName", A.string user.lastName)
+  , ("userEmail", A.string user.email)
+  , ("clientUrl", A.string serverConfig.general.clientUrl)
+  ]
+
+sendEmail :: ToJSON dto => dto -> User -> RequestContextM ()
+sendEmail dto user = do
   runInTransaction $ do
     uuid <- liftIO generateUuid
     now <- liftIO getCurrentTime
     let body = encodeJsonToString dto
-    let command = toPersistentCommand uuid "mailer" "sendMail" body 10 U.nil (Just createdBy) now
+    let command = toPersistentCommand uuid "mailer" "sendMail" body 10 U.nil (Just . U.toString $ user.uuid) now
     insertPersistentCommand command
     return ()

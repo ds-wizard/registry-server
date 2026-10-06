@@ -21,8 +21,7 @@ assertExistenceOfPackageInDB requestContext kmPackage = do
 comparePackageDtos resDto expDto = do
   liftIO $ resDto.uuid `shouldBe` expDto.uuid
   liftIO $ resDto.name `shouldBe` expDto.name
-  liftIO $ resDto.organizationId `shouldBe` expDto.organizationId
-  liftIO $ resDto.kmId `shouldBe` expDto.kmId
+  liftIO $ resDto.id `shouldBe` expDto.id
   liftIO $ resDto.version `shouldBe` expDto.version
   liftIO $ resDto.description `shouldBe` expDto.description
   liftIO $ resDto.previousPackageUuid `shouldBe` expDto.previousPackageUuid

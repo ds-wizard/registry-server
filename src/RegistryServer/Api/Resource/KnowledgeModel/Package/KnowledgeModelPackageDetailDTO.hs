@@ -4,15 +4,12 @@ import Data.Time
 import qualified Data.UUID as U
 import GHC.Generics
 
-import RegistryPublic.Model.Organization.OrganizationSimple
-import Shared.Model.Coordinate.Coordinate
 import Shared.Model.KnowledgeModel.Package.KnowledgeModelPackage
 
 data KnowledgeModelPackageDetailDTO = KnowledgeModelPackageDetailDTO
   { uuid :: U.UUID
   , name :: String
-  , organizationId :: String
-  , kmId :: String
+  , id :: String
   , version :: String
   , phase :: KnowledgeModelPackagePhase
   , description :: String
@@ -21,10 +18,11 @@ data KnowledgeModelPackageDetailDTO = KnowledgeModelPackageDetailDTO
   , language :: String
   , metamodelVersion :: Int
   , previousPackageUuid :: Maybe U.UUID
-  , forkOfPackageId :: Maybe Coordinate
-  , mergeCheckpointPackageId :: Maybe Coordinate
+  , forkOfPackageId :: Maybe String
+  , forkOfPackageVersion :: Maybe String
+  , mergeCheckpointPackageId :: Maybe String
+  , mergeCheckpointPackageVersion :: Maybe String
   , versions :: [String]
-  , organization :: OrganizationSimple
   , createdAt :: UTCTime
   }
   deriving (Show, Eq, Generic)

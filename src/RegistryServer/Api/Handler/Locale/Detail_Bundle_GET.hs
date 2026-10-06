@@ -29,5 +29,5 @@ detail_bundle_GET mTokenHeader coordinate =
     runInAuthService NoTransaction $ do
       zipFile <- exportBundle coordinate
       let cdHeader = "attachment;filename=\"locale.zip\""
-      traceUuid <- asks traceUuid
+      traceUuid <- asks (.traceUuid)
       return . addHeader (U.toString traceUuid) . addHeader cdHeader . FileStreamLazy $ zipFile

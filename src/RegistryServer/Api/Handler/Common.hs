@@ -7,11 +7,12 @@ import Data.Pool
 import Servant (throwError)
 
 import RegistryPublic.Api.Resource.Package.KnowledgeModelPackageSimpleJM ()
-import RegistryPublic.Model.Organization.Organization
-import RegistryServer.Database.DAO.Organization.OrganizationDAO
+import RegistryServer.Database.DAO.User.UserDAO
+import RegistryServer.Localization.Messages.Public
 import RegistryServer.Model.Config.ServerConfig
 import qualified RegistryServer.Model.Context.RequestContext as RequestContext
 import RegistryServer.Model.Context.ServerContext
+import RegistryServer.Model.User.User
 import Shared.Api.Handler.Common
 import Shared.Api.Resource.Error.ErrorJM ()
 import Shared.Localization.Messages.Public
@@ -19,6 +20,7 @@ import Shared.Model.Config.ServerConfig
 import Shared.Model.Context.TransactionState
 import Shared.Model.Error.Error
 import Shared.Service.Sentry.SentryService
+import Shared.Util.Crypto (hashSHA256)
 import Shared.Util.Logger
 import Shared.Util.Token
 import Shared.Util.Uuid
@@ -26,11 +28,11 @@ import Shared.Util.Uuid
 runInUnauthService :: TransactionState -> RequestContext.RequestContextM a -> ServerContextM a
 runInUnauthService = runIn Nothing
 
-runInAuthService :: Organization -> TransactionState -> RequestContext.RequestContextM a -> ServerContextM a
-runInAuthService org = runIn (Just org)
+runInAuthService :: User -> TransactionState -> RequestContext.RequestContextM a -> ServerContextM a
+runInAuthService user = runIn (Just user)
 
-runIn :: Maybe Organization -> TransactionState -> RequestContext.RequestContextM a -> ServerContextM a
-runIn mOrganization transactionState function = do
+runIn :: Maybe User -> TransactionState -> RequestContext.RequestContextM a -> ServerContextM a
+runIn mUser transactionState function = do
   serverContext <- ask
   traceUuid <- liftIO generateUuid
   breadcrumbs <- liftIO (newIORef [])
@@ -44,7 +46,7 @@ runIn mOrganization transactionState function = do
           , httpClientManager = serverContext.httpClientManager
           , traceUuid = traceUuid
           , breadcrumbs = breadcrumbs
-          , currentOrganization = mOrganization
+          , currentUser = mUser
           }
   let loggingLevel = serverContext.serverConfig.logging.level
   eResult <-
@@ -52,34 +54,35 @@ runIn mOrganization transactionState function = do
       Transactional ->
         liftIO $ withResource serverContext.dbPool $ \dbConn ->
           let transactionContext = requestContext {RequestContext.dbConnection = Just dbConn}
-           in guardRequestContext transactionContext (runExceptT $ runLogging loggingLevel $ runReaderT (RequestContext.runRequestContextM function) transactionContext)
-      NoTransaction -> liftIO $ guardRequestContext requestContext (runExceptT $ runLogging loggingLevel $ runReaderT (RequestContext.runRequestContextM function) requestContext)
+           in guardRequestContext transactionContext (runExceptT $ runLogging loggingLevel $ runReaderT function.runRequestContextM transactionContext)
+      NoTransaction -> liftIO $ guardRequestContext requestContext (runExceptT $ runLogging loggingLevel $ runReaderT function.runRequestContextM requestContext)
   case eResult of
     Right result -> return result
     Left error -> throwError =<< sendError error
 
 getMaybeAuthServiceExecutor :: Maybe String -> ((TransactionState -> RequestContext.RequestContextM a -> ServerContextM a) -> ServerContextM b) -> ServerContextM b
 getMaybeAuthServiceExecutor (Just tokenHeader) callback = do
-  organization <- getCurrentOrganization tokenHeader
-  callback (runInAuthService organization)
+  user <- getCurrentUser tokenHeader
+  callback (runInAuthService user)
 getMaybeAuthServiceExecutor Nothing callback = callback runInUnauthService
 
 getAuthServiceExecutor :: Maybe String -> ((TransactionState -> RequestContext.RequestContextM a -> ServerContextM a) -> ServerContextM b) -> ServerContextM b
 getAuthServiceExecutor (Just token) callback = do
-  org <- getCurrentOrganization token
-  callback (runInAuthService org)
+  user <- getCurrentUser token
+  callback (runInAuthService user)
 getAuthServiceExecutor Nothing _ = throwError =<< (sendError . UnauthorizedError $ _ERROR_API_COMMON__UNABLE_TO_GET_TOKEN)
 
-getCurrentOrganization :: String -> ServerContextM Organization
-getCurrentOrganization tokenHeader = do
-  orgToken <- getCurrentOrgToken tokenHeader
-  mOrg <- runInUnauthService NoTransaction (findOrganizationByToken' orgToken)
-  case mOrg of
-    Just org -> return org
-    Nothing -> throwError =<< (sendError . UnauthorizedError $ _ERROR_API_COMMON__UNABLE_TO_GET_ORGANIZATION)
+getCurrentUser :: String -> ServerContextM User
+getCurrentUser tokenHeader = do
+  token <- getCurrentToken tokenHeader
+  mUser <- runInUnauthService NoTransaction (findUserByTokenHash' (hashSHA256 token))
+  case mUser of
+    Just user | user.active -> return user
+    Just _ -> throwError =<< (sendError . UnauthorizedError $ _ERROR_SERVICE_TOKEN__ACCOUNT_IS_NOT_ACTIVATED)
+    Nothing -> throwError =<< (sendError . UnauthorizedError $ _ERROR_API_COMMON__UNABLE_TO_GET_USER)
 
-getCurrentOrgToken :: String -> ServerContextM String
-getCurrentOrgToken tokenHeader =
+getCurrentToken :: String -> ServerContextM String
+getCurrentToken tokenHeader =
   case separateToken tokenHeader of
-    Just orgToken -> return orgToken
+    Just token -> return token
     Nothing -> throwError =<< (sendError . UnauthorizedError $ _ERROR_API_COMMON__UNABLE_TO_GET_TOKEN)

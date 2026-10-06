@@ -9,7 +9,6 @@ import RegistryPublic.Api.Resource.Package.KnowledgeModelPackageSimpleDTO
 import RegistryServer.Api.Resource.KnowledgeModel.Package.KnowledgeModelPackageDetailDTO
 import RegistryServer.Database.DAO.Common
 import RegistryServer.Database.DAO.KnowledgeModel.KnowledgeModelPackageDAO
-import RegistryServer.Database.DAO.Organization.OrganizationDAO
 import RegistryServer.Model.Context.RequestContext
 import RegistryServer.Service.Audit.AuditService
 import RegistryServer.Service.KnowledgeModel.Package.KnowledgeModelPackageMapper
@@ -17,35 +16,25 @@ import Shared.Database.DAO.Package.KnowledgeModelPackageDAO hiding (findPackages
 import Shared.Model.Coordinate.Coordinate
 import Shared.Model.KnowledgeModel.Package.KnowledgeModelPackage
 import Shared.Service.KnowledgeModel.Package.KnowledgeModelPackageUtil
-import Shared.Util.Coordinate
-import Shared.Util.List (foldInContext)
+import Shared.Util.Reference
 
 getSimplePackagesFiltered :: [(String, String)] -> Maybe Int -> [(String, String)] -> RequestContextM [KnowledgeModelPackageSimpleDTO]
 getSimplePackagesFiltered queryParams mMetamodelVersion headers =
   runInTransaction $ do
     _ <- auditListPackages headers
     pkgs <- findPackagesFiltered queryParams mMetamodelVersion
-    foldInContext . mapToSimpleDTO . chooseTheNewest . groupPackages $ pkgs
-  where
-    mapToSimpleDTO :: [KnowledgeModelPackage] -> [RequestContextM KnowledgeModelPackageSimpleDTO]
-    mapToSimpleDTO =
-      fmap
-        ( \pkg -> do
-            org <- findOrganizationByOrgId pkg.organizationId
-            return $ toSimpleDTO pkg org
-        )
+    return . fmap toSimpleDTO . chooseTheNewest . groupPackages $ pkgs
 
 getPackageByCoordinate :: Coordinate -> RequestContextM KnowledgeModelPackageDetailDTO
 getPackageByCoordinate coordinate = do
-  pkg <- resolvePackageCoordinate coordinate
+  pkg <- resolvePackageCoordinate coordinate Nothing
   versions <- getPackageVersions pkg
-  org <- findOrganizationByOrgId pkg.organizationId
-  return $ toDetailDTO pkg versions org
+  return $ toDetailDTO pkg versions
 
 -- --------------------------------
 -- PRIVATE
 -- --------------------------------
 getPackageVersions :: KnowledgeModelPackage -> RequestContextM [String]
 getPackageVersions pkg = do
-  allPkgs <- findPackagesByOrganizationIdAndKmId pkg.organizationId pkg.kmId
+  allPkgs <- findPackagesById pkg.id Nothing
   return . L.sort . fmap (.version) $ allPkgs

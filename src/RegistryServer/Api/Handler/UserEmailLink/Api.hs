@@ -1,11 +1,14 @@
 module RegistryServer.Api.Handler.UserEmailLink.Api where
 
 import Servant
+import Servant.Swagger.Tags
 
 import RegistryServer.Api.Handler.UserEmailLink.List_POST
 import RegistryServer.Model.Context.ServerContext
 
-type UserEmailLinkAPI = List_POST
+type UserEmailLinkAPI =
+  Tags "User Email Link"
+    :> List_POST
 
 userEmailLinkApi :: Proxy UserEmailLinkAPI
 userEmailLinkApi = Proxy

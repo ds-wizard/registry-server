@@ -21,11 +21,11 @@ import Specs.Api.Handler.Common
 import Specs.Common
 
 -- ------------------------------------------------------------------------
--- GET /document-templates/{documentTemplateId}/bundle
+-- GET /api/document-templates/{documentTemplateId}/bundle
 -- ------------------------------------------------------------------------
 detail_bundle_GET :: RequestContext -> SpecWith ((), Application)
 detail_bundle_GET requestContext =
-  describe "GET /document-templates/{documentTemplateId}/bundle" $ do
+  describe "GET /api/document-templates/{documentTemplateId}/bundle" $ do
     test_200 requestContext
     test_401 requestContext
     test_404 requestContext
@@ -35,7 +35,7 @@ detail_bundle_GET requestContext =
 -- ----------------------------------------------------
 reqMethod = methodGet
 
-reqUrl = BS.pack $ "/document-templates/" ++ show wizardDocumentTemplateCoordinate ++ "/bundle"
+reqUrl = BS.pack $ "/api/document-templates/" ++ show wizardDocumentTemplateCoordinate ++ "/bundle"
 
 reqHeaders = [reqAdminAuthHeader, reqCtHeader]
 
@@ -72,8 +72,8 @@ test_401 requestContext = createAuthTest reqMethod reqUrl [reqCtHeader] reqBody
 test_404 requestContext =
   createNotFoundTest'
     reqMethod
-    "/document-templates/global:non-existing-template:1.0.0/bundle"
+    "/api/document-templates/global.non-existing-template:1.0.0/bundle"
     reqHeaders
     reqBody
     "document_template"
-    [("organization_id", "global"), ("template_id", "non-existing-template"), ("version", "1.0.0")]
+    [("id", "global.non-existing-template"), ("version", "1.0.0")]

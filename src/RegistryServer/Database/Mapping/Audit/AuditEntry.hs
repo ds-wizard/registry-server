@@ -12,7 +12,7 @@ import Shared.Database.Mapping.Common
 instance ToRow AuditEntry where
   toRow ListPackagesAuditEntry {..} =
     [ toStringField "ListPackagesAuditEntry"
-    , toField organizationId
+    , toField userUuid
     , toField createdAt
     , toField instanceStatistics.userCount
     , toField instanceStatistics.pkgCount
@@ -26,7 +26,7 @@ instance ToRow AuditEntry where
     ]
   toRow GetKnowledgeModelBundleAuditEntry {..} =
     [ toStringField "GetKnowledgeModelBundleAuditEntry"
-    , toField organizationId
+    , toField userUuid
     , toField createdAt
     , toField (Nothing :: Maybe String)
     , toField (Nothing :: Maybe String)
@@ -34,13 +34,13 @@ instance ToRow AuditEntry where
     , toField (Nothing :: Maybe String)
     , toField (Nothing :: Maybe String)
     , toField (Nothing :: Maybe String)
-    , toField knowledgeModelPackageId
+    , toField knowledgeModelPackageReference
     , toField (Nothing :: Maybe String)
     , toField (Nothing :: Maybe String)
     ]
   toRow GetDocumentTemplateBundleAuditEntry {..} =
     [ toStringField "GetDocumentTemplateBundleAuditEntry"
-    , toField organizationId
+    , toField userUuid
     , toField createdAt
     , toField (Nothing :: Maybe String)
     , toField (Nothing :: Maybe String)
@@ -49,12 +49,12 @@ instance ToRow AuditEntry where
     , toField (Nothing :: Maybe String)
     , toField (Nothing :: Maybe String)
     , toField (Nothing :: Maybe String)
-    , toField documentTemplateId
+    , toField documentTemplateReference
     , toField (Nothing :: Maybe String)
     ]
   toRow GetLocaleBundleAuditEntry {..} =
     [ toStringField "GetLocaleBundleAuditEntry"
-    , toField organizationId
+    , toField userUuid
     , toField createdAt
     , toField (Nothing :: Maybe String)
     , toField (Nothing :: Maybe String)
@@ -64,7 +64,7 @@ instance ToRow AuditEntry where
     , toField (Nothing :: Maybe String)
     , toField (Nothing :: Maybe String)
     , toField (Nothing :: Maybe String)
-    , toField localeId
+    , toField localeReference
     ]
 
 instance FromRow AuditEntry where
@@ -72,7 +72,7 @@ instance FromRow AuditEntry where
     aType <- field
     case aType of
       "ListPackagesAuditEntry" -> do
-        organizationId <- field
+        userUuid <- field
         createdAt <- field
         userCount <- field
         pkgCount <- field
@@ -86,7 +86,7 @@ instance FromRow AuditEntry where
         _ <- field :: RowParser (Maybe String)
         return $ ListPackagesAuditEntry {..}
       "GetKnowledgeModelBundleAuditEntry" -> do
-        organizationId <- field
+        userUuid <- field
         createdAt <- field
         _ <- field :: RowParser (Maybe String)
         _ <- field :: RowParser (Maybe String)
@@ -94,12 +94,12 @@ instance FromRow AuditEntry where
         _ <- field :: RowParser (Maybe String)
         _ <- field :: RowParser (Maybe String)
         _ <- field :: RowParser (Maybe String)
-        knowledgeModelPackageId <- field
+        knowledgeModelPackageReference <- field
         _ <- field :: RowParser (Maybe String)
         _ <- field :: RowParser (Maybe String)
         return $ GetKnowledgeModelBundleAuditEntry {..}
       "GetDocumentTemplateBundleAuditEntry" -> do
-        organizationId <- field
+        userUuid <- field
         createdAt <- field
         _ <- field :: RowParser (Maybe String)
         _ <- field :: RowParser (Maybe String)
@@ -108,11 +108,11 @@ instance FromRow AuditEntry where
         _ <- field :: RowParser (Maybe String)
         _ <- field :: RowParser (Maybe String)
         _ <- field :: RowParser (Maybe String)
-        documentTemplateId <- field
+        documentTemplateReference <- field
         _ <- field :: RowParser (Maybe String)
         return $ GetDocumentTemplateBundleAuditEntry {..}
       "GetLocaleBundleAuditEntry" -> do
-        organizationId <- field
+        userUuid <- field
         createdAt <- field
         _ <- field :: RowParser (Maybe String)
         _ <- field :: RowParser (Maybe String)
@@ -122,6 +122,6 @@ instance FromRow AuditEntry where
         _ <- field :: RowParser (Maybe String)
         _ <- field :: RowParser (Maybe String)
         _ <- field :: RowParser (Maybe String)
-        localeId <- field
+        localeReference <- field
         return $ GetLocaleBundleAuditEntry {..}
       _ -> error $ "Unknown AuditEntry type: " ++ aType

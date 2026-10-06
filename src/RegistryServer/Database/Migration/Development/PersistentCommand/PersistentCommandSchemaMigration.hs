@@ -30,12 +30,11 @@ createTables = do
         \    attempts           int         NOT NULL, \
         \    max_attempts       int         NOT NULL, \
         \    tenant_uuid        uuid        NOT NULL, \
-        \    created_by         varchar     NOT NULL, \
+        \    created_by         varchar, \
         \    created_at         timestamptz NOT NULL, \
         \    updated_at         timestamptz NOT NULL, \
         \    last_trace_uuid    uuid, \
-        \    CONSTRAINT persistent_command_pk PRIMARY KEY (uuid), \
-        \    CONSTRAINT persistent_command_created_by_fk FOREIGN KEY (created_by) REFERENCES organization (organization_id) ON DELETE CASCADE \
+        \    CONSTRAINT persistent_command_pk PRIMARY KEY (uuid) \
         \); \
         \CREATE INDEX persistent_command_queue_idx ON persistent_command (component, created_at) WHERE state <> 'DonePersistentCommandState';"
   let action conn = execute_ conn sql

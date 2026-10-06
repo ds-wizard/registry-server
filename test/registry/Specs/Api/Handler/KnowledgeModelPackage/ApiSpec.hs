@@ -6,6 +6,7 @@ import Test.Hspec.Wai hiding (shouldRespondWith)
 import Specs.Api.Handler.Common
 import Specs.Api.Handler.KnowledgeModelPackage.Detail_Bundle_GET
 import Specs.Api.Handler.KnowledgeModelPackage.Detail_GET
+import Specs.Api.Handler.KnowledgeModelPackage.List_Bundle_POST
 import Specs.Api.Handler.KnowledgeModelPackage.List_GET
 
 knowledgeModelPackageAPI serverContext requestContext =
@@ -14,3 +15,4 @@ knowledgeModelPackageAPI serverContext requestContext =
       list_GET requestContext
       detail_GET requestContext
       detail_bundle_GET requestContext
+      list_bundle_POST requestContext

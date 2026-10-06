@@ -3,10 +3,10 @@ module RegistryServer.Database.Migration.Development.Audit.Data.AuditEntries whe
 import Data.Maybe (fromJust)
 import Data.Time
 
-import RegistryPublic.Database.Migration.Development.Organization.Data.Organizations
-import RegistryPublic.Model.Organization.Organization
 import RegistryServer.Database.Migration.Development.Statistics.Data.InstanceStatistics
+import RegistryServer.Database.Migration.Development.User.Data.Users
 import RegistryServer.Model.Audit.AuditEntry
+import RegistryServer.Model.User.User
 import Shared.Database.Migration.Development.KnowledgeModel.Data.Package.KnowledgeModelPackages
 import Shared.Model.Coordinate.Coordinate
 import Shared.Model.KnowledgeModel.Package.KnowledgeModelPackage ()
@@ -14,7 +14,7 @@ import Shared.Model.KnowledgeModel.Package.KnowledgeModelPackage ()
 listPackagesAuditEntry :: AuditEntry
 listPackagesAuditEntry =
   ListPackagesAuditEntry
-    { organizationId = orgGlobal.organizationId
+    { userUuid = Just userAdmin.uuid
     , instanceStatistics = iStat
     , createdAt = UTCTime (fromJust $ fromGregorianValid 2018 1 20) 0
     }
@@ -22,7 +22,7 @@ listPackagesAuditEntry =
 getKnowledgeModelBundleAuditEntry :: AuditEntry
 getKnowledgeModelBundleAuditEntry =
   GetKnowledgeModelBundleAuditEntry
-    { organizationId = orgGlobal.organizationId
-    , knowledgeModelPackageId = show . createCoordinate $ netherlandsKmPackageV2
+    { userUuid = Just userAdmin.uuid
+    , knowledgeModelPackageReference = show . createCoordinate $ netherlandsKmPackageV2
     , createdAt = UTCTime (fromJust $ fromGregorianValid 2018 1 20) 0
     }

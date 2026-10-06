@@ -24,11 +24,11 @@ import Specs.Api.Handler.Audit.Common
 import Specs.Api.Handler.Common
 
 -- ------------------------------------------------------------------------
--- GET /knowledge-model-packages/{pkgId}/bundle
+-- GET /api/knowledge-model-packages/{pkgId}/bundle
 -- ------------------------------------------------------------------------
 detail_bundle_GET :: RequestContext -> SpecWith ((), Application)
 detail_bundle_GET requestContext =
-  describe "GET /knowledge-model-packages/{pkgId}/bundle" $ do
+  describe "GET /api/knowledge-model-packages/{pkgId}/bundle" $ do
     test_200 requestContext
     test_401 requestContext
     test_404 requestContext
@@ -38,7 +38,7 @@ detail_bundle_GET requestContext =
 -- ----------------------------------------------------
 reqMethod = methodGet
 
-reqUrl = BS.pack $ "/knowledge-model-packages/" ++ show (createCoordinate netherlandsKmPackageV2) ++ "/bundle"
+reqUrl = BS.pack $ "/api/knowledge-model-packages/" ++ show (createCoordinate netherlandsKmPackageV2) ++ "/bundle"
 
 reqHeaders = [reqAdminAuthHeader, reqCtHeader]
 
@@ -75,8 +75,8 @@ test_401 requestContext = createAuthTest reqMethod reqUrl [reqCtHeader] reqBody
 test_404 requestContext =
   createNotFoundTest'
     reqMethod
-    "/knowledge-model-packages/global:non-existing-km-package:1.0.0/bundle"
+    "/api/knowledge-model-packages/global.non-existing-km-package:1.0.0/bundle"
     reqHeaders
     reqBody
     "knowledge_model_package"
-    [("organization_id", "global"), ("km_id", "non-existing-km-package"), ("version", "1.0.0")]
+    [("id", "global.non-existing-km-package"), ("version", "1.0.0")]

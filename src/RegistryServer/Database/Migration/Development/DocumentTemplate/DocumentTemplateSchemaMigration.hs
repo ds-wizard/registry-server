@@ -38,8 +38,7 @@ createTemplateTable = do
         \( \
         \    uuid              uuid             NOT NULL, \
         \    name              varchar          NOT NULL, \
-        \    organization_id   varchar          NOT NULL, \
-        \    template_id       varchar          NOT NULL, \
+        \    id                varchar          NOT NULL, \
         \    version           varchar          NOT NULL, \
         \    metamodel_version sem_ver_2_tuple  NOT NULL, \
         \    description       varchar          NOT NULL, \
@@ -53,10 +52,11 @@ createTemplateTable = do
         \    non_editable      boolean          NOT NULL, \
         \    language          varchar          NOT NULL, \
         \    pot_file_ready    boolean          NOT NULL, \
+        \    workspace_uuid    uuid, \
         \    CONSTRAINT document_template_pk PRIMARY KEY (uuid) \
         \); \
         \ \
-        \CREATE INDEX document_template_organization_id_template_id_index ON document_template (organization_id, template_id);"
+        \CREATE INDEX document_template_id_index ON document_template (id);"
   let action conn = execute_ conn sql
   runDB action
 

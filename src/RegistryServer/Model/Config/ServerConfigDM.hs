@@ -14,6 +14,7 @@ defaultConfig =
     , logging = defaultLogging
     , cloud = defaultCloud
     , persistentCommand = defaultPersistentCommand
+    , userEmailLink = defaultUserEmailLink
     }
 
 defaultGeneral :: ServerConfigGeneral

@@ -1,33 +1,29 @@
 module RegistryServer.Service.KnowledgeModel.Package.KnowledgeModelPackageMapper where
 
 import RegistryPublic.Api.Resource.Package.KnowledgeModelPackageSimpleDTO
-import qualified RegistryPublic.Model.Organization.Organization as Organization
 import RegistryServer.Api.Resource.KnowledgeModel.Package.KnowledgeModelPackageDetailDTO
-import qualified RegistryServer.Service.Organization.OrganizationMapper as OM
 import Shared.Api.Resource.KnowledgeModel.Event.KnowledgeModelEventJM ()
+import Shared.Model.Coordinate.Coordinate
 import Shared.Model.KnowledgeModel.Package.KnowledgeModelPackage
 
-toSimpleDTO :: KnowledgeModelPackage -> Organization.Organization -> KnowledgeModelPackageSimpleDTO
-toSimpleDTO pkg org =
+toSimpleDTO :: KnowledgeModelPackage -> KnowledgeModelPackageSimpleDTO
+toSimpleDTO pkg =
   KnowledgeModelPackageSimpleDTO
     { uuid = pkg.uuid
     , name = pkg.name
-    , organizationId = pkg.organizationId
-    , kmId = pkg.kmId
+    , id = pkg.id
     , version = pkg.version
     , description = pkg.description
     , createdAt = pkg.createdAt
-    , organization = OM.toSimpleDTO org
     , language = pkg.language
     }
 
-toDetailDTO :: KnowledgeModelPackage -> [String] -> Organization.Organization -> KnowledgeModelPackageDetailDTO
-toDetailDTO pkg versions org =
+toDetailDTO :: KnowledgeModelPackage -> [String] -> KnowledgeModelPackageDetailDTO
+toDetailDTO pkg versions =
   KnowledgeModelPackageDetailDTO
     { uuid = pkg.uuid
     , name = pkg.name
-    , organizationId = pkg.organizationId
-    , kmId = pkg.kmId
+    , id = pkg.id
     , version = pkg.version
     , phase = pkg.phase
     , description = pkg.description
@@ -36,9 +32,10 @@ toDetailDTO pkg versions org =
     , language = pkg.language
     , metamodelVersion = pkg.metamodelVersion
     , previousPackageUuid = pkg.previousPackageUuid
-    , forkOfPackageId = pkg.forkOfPackageId
-    , mergeCheckpointPackageId = pkg.mergeCheckpointPackageId
+    , forkOfPackageId = fmap (.id) pkg.forkOfPackageId
+    , forkOfPackageVersion = fmap (.version) pkg.forkOfPackageId
+    , mergeCheckpointPackageId = fmap (.id) pkg.mergeCheckpointPackageId
+    , mergeCheckpointPackageVersion = fmap (.version) pkg.mergeCheckpointPackageId
     , versions = versions
-    , organization = OM.toSimpleDTO org
     , createdAt = pkg.createdAt
     }

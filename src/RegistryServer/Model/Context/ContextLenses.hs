@@ -8,10 +8,10 @@ import GHC.Records
 import Network.HTTP.Client (Manager)
 import Network.Minio (MinioConn)
 
-import RegistryPublic.Model.Organization.Organization
 import RegistryServer.Model.Config.ServerConfig
 import RegistryServer.Model.Context.RequestContext
 import RegistryServer.Model.Context.ServerContext
+import RegistryServer.Model.User.User
 import Shared.Constant.Tenant
 import Shared.Model.Config.BuildInfoConfig
 import Shared.Model.Config.ServerConfig
@@ -90,10 +90,10 @@ instance HasField "buildInfoConfig'" ServerContext BuildInfoConfig where
   getField = (.buildInfoConfig)
 
 instance HasField "identity'" RequestContext (Maybe String) where
-  getField entity = fmap (.token) entity.currentOrganization
+  getField entity = fmap (U.toString . (.uuid)) entity.currentUser
 
 instance HasField "identityEmail'" RequestContext (Maybe String) where
-  getField entity = fmap (.email) entity.currentOrganization
+  getField entity = fmap (.email) entity.currentUser
 
 instance HasField "traceUuid'" RequestContext U.UUID where
   getField = (.traceUuid)
@@ -109,3 +109,5 @@ instance AclContext RequestContextM where
   checkPermissionsAny perms = return ()
   checkPermissionsAll perms = return ()
   hasPermission perm = return True
+  hasPermissionInWorkspace perm _ = return True
+  checkPermissionInWorkspace perm _ = return ()

@@ -15,11 +15,11 @@ import Specs.Api.Handler.Common
 import Specs.Common
 
 -- ------------------------------------------------------------------------
--- GET /locales/{lclId}/bundle
+-- GET /api/locales/{lclId}/bundle
 -- ------------------------------------------------------------------------
 detail_bundle_GET :: RequestContext -> SpecWith ((), Application)
 detail_bundle_GET requestContext =
-  describe "GET /locales/{lclId}/bundle" $ do
+  describe "GET /api/locales/{lclId}/bundle" $ do
     test_200 requestContext
     test_401 requestContext
     test_404 requestContext
@@ -29,7 +29,7 @@ detail_bundle_GET requestContext =
 -- ----------------------------------------------------
 reqMethod = methodGet
 
-reqUrl = "/locales/global:dutch:1.0.0/bundle"
+reqUrl = "/api/locales/global.dutch:1.0.0/bundle"
 
 reqHeaders = [reqAdminAuthHeader, reqCtHeader]
 
@@ -65,8 +65,8 @@ test_401 requestContext = createAuthTest reqMethod reqUrl [reqCtHeader] reqBody
 test_404 requestContext =
   createNotFoundTest'
     reqMethod
-    "/locales/global:non-existing-locale:1.0.0/bundle"
+    "/api/locales/global.non-existing-locale:1.0.0/bundle"
     reqHeaders
     reqBody
     "locale"
-    [("organization_id", "global"), ("locale_id", "non-existing-locale"), ("version", "1.0.0")]
+    [("id", "global.non-existing-locale"), ("version", "1.0.0")]

@@ -10,7 +10,6 @@ import Test.Hspec.Wai hiding (shouldRespondWith)
 import Test.Hspec.Wai.Matcher
 
 import RegistryPublic.Api.Resource.Locale.LocaleJM ()
-import RegistryPublic.Database.Migration.Development.Organization.Data.Organizations
 import qualified RegistryServer.Database.Migration.Development.Locale.LocaleMigration as TML_Migration
 import RegistryServer.Model.Context.RequestContext
 import RegistryServer.Service.Locale.LocaleMapper
@@ -20,17 +19,17 @@ import SharedTest.Specs.Api.Common
 import Specs.Common
 
 -- ------------------------------------------------------------------------
--- GET /locales
+-- GET /api/locales
 -- ------------------------------------------------------------------------
 list_GET :: RequestContext -> SpecWith ((), Application)
-list_GET requestContext = describe "GET /locales" $ test_200 requestContext
+list_GET requestContext = describe "GET /api/locales" $ test_200 requestContext
 
 -- ----------------------------------------------------
 -- ----------------------------------------------------
 -- ----------------------------------------------------
 reqMethod = methodGet
 
-reqUrl = "/locales"
+reqUrl = "/api/locales"
 
 reqHeaders = [reqCtHeader]
 
@@ -45,7 +44,7 @@ test_200 requestContext =
     do
       let expStatus = 200
       let expHeaders = resCtHeader : resCorsHeaders
-      let expDto = [toDTO [orgGlobal] localeNl]
+      let expDto = [toDTO localeNl]
       let expBody = encode expDto
       -- AND: Run migrations
       runInContextIO TML_Migration.runMigration requestContext

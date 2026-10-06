@@ -18,6 +18,7 @@ import qualified RegistryServer.Model.KnowledgeModel.Bundle.KnowledgeModelBundle
 import RegistryServer.Model.KnowledgeModel.Package.KnowledgeModelPackageRaw
 import RegistryServer.Service.Audit.AuditService
 import RegistryServer.Service.KnowledgeModel.Bundle.KnowledgeModelBundleAcl
+import RegistryServer.Service.Publication.PublicationService
 import Shared.Api.Resource.KnowledgeModel.Bundle.KnowledgeModelBundlePackageJM ()
 import Shared.Constant.KnowledgeModel
 import Shared.Constant.Tenant
@@ -30,6 +31,7 @@ import Shared.Model.Error.Error
 import qualified Shared.Model.KnowledgeModel.Bundle.KnowledgeModelBundle as S_KnowledgeModelBundle
 import Shared.Model.KnowledgeModel.Bundle.KnowledgeModelBundlePackage
 import Shared.Model.KnowledgeModel.Package.KnowledgeModelPackage
+import Shared.Service.Coordinate.CoordinateValidation
 import qualified Shared.Service.KnowledgeModel.Package.KnowledgeModelPackageMapper as PM
 import Shared.Service.KnowledgeModel.Package.KnowledgeModelPackageUtil
 import Shared.Util.List
@@ -38,16 +40,14 @@ import Shared.Util.Uuid
 exportBundle :: Coordinate -> RequestContextM R_KnowledgeModelBundle.KnowledgeModelBundle
 exportBundle coordinate = do
   _ <- auditGetKnowledgeModelBundle coordinate
-  resolvedPb <- resolvePackageCoordinate coordinate
+  resolvedPb <- resolvePackageCoordinate coordinate Nothing
   packages <- findSeriesOfPackagesRecursiveByUuid resolvedPb.uuid
   case lastSafe packages of
     Just newestPackage -> do
       let pb =
             R_KnowledgeModelBundle.KnowledgeModelBundle
-              { bundleId = newestPackage.pId
-              , name = newestPackage.name
-              , organizationId = newestPackage.organizationId
-              , kmId = newestPackage.kmId
+              { name = newestPackage.name
+              , id = newestPackage.id
               , version = newestPackage.version
               , metamodelVersion = knowledgeModelMetamodelVersion
               , packages = packages
@@ -60,11 +60,12 @@ importBundle pb =
   runInTransaction $ do
     checkWritePermission
     pkg <- extractMainPackage pb
+    traverse_ (validateIdentifierFormat "id" . (.id)) pb.packages
     traverse_ importPackage pb.packages
     return pb
   where
     extractMainPackage pb =
-      case L.find (\p -> p.pId == pb.bundleId) pb.packages of
+      case L.find (\p -> createCoordinate p == createCoordinate pb) pb.packages of
         Just pkg -> return pkg
         Nothing -> throwError . UserError $ _ERROR_VALIDATION__MAIN_PKG_OF_PB_ABSENCE
 
@@ -74,17 +75,18 @@ importBundle pb =
 importPackage :: KnowledgeModelBundlePackage -> RequestContextM ()
 importPackage dto =
   runInTransaction $ do
-    eitherPackage <- findPackageByCoordinate' (createCoordinate dto)
+    eitherPackage <- findPackageByCoordinate' (createCoordinate dto) Nothing
     case eitherPackage of
       Nothing -> do
         pkgUuid <- liftIO generateUuid
         mPreviousPackageUuid <-
           case dto.previousPackageId of
             Just previousPackageId -> do
-              previousPackage <- findPackageByCoordinate previousPackageId
+              previousPackage <- findPackageByCoordinate previousPackageId Nothing
               return . Just $ previousPackage.uuid
             Nothing -> return Nothing
-        let (pkg, pkgEvents) = PM.fromKnowledgeModelBundlePackage dto pkgUuid mPreviousPackageUuid U.nil
+        let (pkg, pkgEvents) = PM.fromKnowledgeModelBundlePackage dto pkgUuid mPreviousPackageUuid U.nil Nothing
         insertPackage pkg
         traverse_ insertPackageEvent pkgEvents
+        recordPublication pkg.uuid
       Just _ -> return ()
