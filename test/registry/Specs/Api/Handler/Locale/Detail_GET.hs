@@ -9,7 +9,6 @@ import Test.Hspec
 import Test.Hspec.Wai hiding (shouldRespondWith)
 import Test.Hspec.Wai.Matcher
 
-import RegistryPublic.Database.Migration.Development.Organization.Data.Organizations
 import RegistryServer.Api.Resource.Locale.LocaleDetailJM ()
 import qualified RegistryServer.Database.Migration.Development.Locale.LocaleMigration as TML_Migration
 import RegistryServer.Model.Context.RequestContext
@@ -21,11 +20,11 @@ import SharedTest.Specs.Api.Common
 import Specs.Common
 
 -- ------------------------------------------------------------------------
--- GET /locales/{lclId}
+-- GET /api/locales/{lclId}
 -- ------------------------------------------------------------------------
 detail_GET :: RequestContext -> SpecWith ((), Application)
 detail_GET requestContext =
-  describe "GET /locales/{lclId}" $ do
+  describe "GET /api/locales/{lclId}" $ do
     test_200 requestContext
     test_404 requestContext
 
@@ -34,7 +33,7 @@ detail_GET requestContext =
 -- ----------------------------------------------------
 reqMethod = methodGet
 
-reqUrl = "/locales/global:dutch:1.0.0"
+reqUrl = "/api/locales/global.dutch:1.0.0"
 
 reqHeaders = [reqCtHeader]
 
@@ -49,7 +48,7 @@ test_200 requestContext =
     do
       let expStatus = 200
       let expHeaders = resCtHeader : resCorsHeaders
-      let expDto = toDetailDTO localeNl [localeNl.version] orgGlobal
+      let expDto = toDetailDTO localeNl [localeNl.version]
       let expBody = encode expDto
       -- AND: Run migrations
       runInContextIO TML_Migration.runMigration requestContext
@@ -66,8 +65,8 @@ test_200 requestContext =
 test_404 requestContext =
   createNotFoundTest'
     reqMethod
-    "/locales/global:non-existing-locale:1.0.0"
+    "/api/locales/global.non-existing-locale:1.0.0"
     reqHeaders
     reqBody
     "locale"
-    [("organization_id", "global"), ("locale_id", "non-existing-locale"), ("version", "1.0.0")]
+    [("id", "global.non-existing-locale"), ("version", "1.0.0")]

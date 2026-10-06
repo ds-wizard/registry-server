@@ -8,10 +8,8 @@ import Shared.Model.Coordinate.Coordinate
 import Shared.Model.KnowledgeModel.Package.KnowledgeModelPackage
 
 data KnowledgeModelPackageRaw = KnowledgeModelPackageRaw
-  { pId :: Coordinate
+  { id :: String
   , name :: String
-  , organizationId :: String
-  , kmId :: String
   , version :: String
   , phase :: KnowledgeModelPackagePhase
   , metamodelVersion :: Int

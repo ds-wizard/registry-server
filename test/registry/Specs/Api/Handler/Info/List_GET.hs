@@ -20,17 +20,17 @@ import SharedTest.Specs.Api.Common
 import Specs.Common
 
 -- ------------------------------------------------------------------------
--- GET /
+-- GET /api/
 -- ------------------------------------------------------------------------
 list_GET :: RequestContext -> SpecWith ((), Application)
-list_GET requestContext = describe "GET /" $ test_200 requestContext
+list_GET requestContext = describe "GET /api/" $ test_200 requestContext
 
 -- ----------------------------------------------------
 -- ----------------------------------------------------
 -- ----------------------------------------------------
 reqMethod = methodGet
 
-reqUrl = "/"
+reqUrl = "/api/"
 
 reqHeaders = []
 

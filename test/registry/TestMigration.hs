@@ -2,17 +2,21 @@ module TestMigration where
 
 import Data.Foldable (traverse_)
 
-import RegistryPublic.Database.Migration.Development.Organization.Data.Organizations
 import RegistryServer.Database.DAO.Audit.AuditEntryDAO
-import RegistryServer.Database.DAO.Organization.OrganizationDAO
+import RegistryServer.Database.DAO.Publication.PublicationDAO
+import RegistryServer.Database.DAO.User.UserDAO
+import RegistryServer.Database.DAO.UserToken.UserTokenDAO
 import qualified RegistryServer.Database.Migration.Development.Audit.AuditSchemaMigration as Audit
 import qualified RegistryServer.Database.Migration.Development.Common.CommonSchemaMigration as Common
 import qualified RegistryServer.Database.Migration.Development.DocumentTemplate.DocumentTemplateSchemaMigration as DocumentTemplate
 import qualified RegistryServer.Database.Migration.Development.KnowledgeModel.KnowledgeModelPackageSchemaMigration as KnowledgeModelPackage
 import qualified RegistryServer.Database.Migration.Development.Locale.LocaleSchemaMigration as Locale
-import qualified RegistryServer.Database.Migration.Development.Organization.OrganizationSchemaMigration as Organization
 import qualified RegistryServer.Database.Migration.Development.PersistentCommand.PersistentCommandSchemaMigration as PersistentCommand
+import qualified RegistryServer.Database.Migration.Development.Publication.PublicationSchemaMigration as Publication
+import qualified RegistryServer.Database.Migration.Development.User.Data.Users as Users
+import qualified RegistryServer.Database.Migration.Development.User.UserSchemaMigration as User
 import qualified RegistryServer.Database.Migration.Development.UserEmailLink.UserEmailLinkSchemaMigration as UserEmailLink
+import qualified RegistryServer.Database.Migration.Development.UserToken.Data.UserTokens as UserTokens
 import Shared.Database.DAO.Component.ComponentDAO
 import Shared.Database.DAO.DocumentTemplate.DocumentTemplateDAO
 import Shared.Database.DAO.Locale.LocaleDAO
@@ -30,11 +34,12 @@ buildSchema requestContext =
   do
     putStrLn "DB: dropping schema"
     runInContext Component.dropTables requestContext
+    runInContext Publication.dropTables requestContext
     runInContext Locale.dropTables requestContext
     runInContext PersistentCommand.dropTables requestContext
     runInContext UserEmailLink.dropTables requestContext
     runInContext Audit.dropTables requestContext
-    runInContext Organization.dropTables requestContext
+    runInContext User.dropTables requestContext
     runInContext KnowledgeModelPackage.dropTables requestContext
     runInContext DocumentTemplate.dropTables requestContext
     putStrLn "DB: Drop DB types"
@@ -43,7 +48,7 @@ buildSchema requestContext =
     putStrLn "DB: Create DB types"
     runInContext Common.createTypes requestContext
     putStrLn "DB: Creating schema"
-    runInContext Organization.createTables requestContext
+    runInContext User.createTables requestContext
     runInContext KnowledgeModelPackage.createTables requestContext
     runInContext UserEmailLink.createTables requestContext
     runInContext Audit.createTables requestContext
@@ -51,6 +56,7 @@ buildSchema requestContext =
     runInContext PersistentCommand.createTables requestContext
     runInContext Locale.createTables requestContext
     runInContext Component.createTables requestContext
+    runInContext Publication.createTables requestContext
 
 resetDB requestContext = do
   runInContext deletePersistentCommands requestContext
@@ -59,10 +65,13 @@ resetDB requestContext = do
   runInContext deletePackages requestContext
   runInContext deleteDocumentTemplates requestContext
   runInContext deleteLocales requestContext
-  runInContext deleteOrganizations requestContext
+  runInContext deletePublications requestContext
+  runInContext deleteUsers requestContext
   runInContext deleteComponents requestContext
-  runInContext (insertOrganization orgGlobal) requestContext
-  runInContext (insertOrganization orgNetherlands) requestContext
+  runInContext (insertUser Users.userAdmin) requestContext
+  runInContext (insertUser Users.userNikola) requestContext
+  runInContext (insertUserToken UserTokens.adminApiKey) requestContext
+  runInContext (insertUserToken UserTokens.nikolaApiKey) requestContext
   runInContext (insertPackage globalKmPackageEmpty) requestContext
   runInContext (traverse_ insertPackageEvent globalKmPackageEmptyEvents) requestContext
   runInContext (insertPackage globalKmPackage) requestContext

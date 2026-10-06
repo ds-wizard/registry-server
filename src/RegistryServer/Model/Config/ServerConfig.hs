@@ -12,6 +12,7 @@ data ServerConfig = ServerConfig
   , sentry :: ServerConfigSentry
   , logging :: ServerConfigLogging
   , persistentCommand :: ServerConfigPersistentCommand
+  , userEmailLink :: ServerConfigUserEmailLink
   , cloud :: ServerConfigCloud
   }
   deriving (Generic, Show)

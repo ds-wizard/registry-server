@@ -12,4 +12,4 @@ import Shared.Util.Swagger
 instance ToSchema UserEmailLinkType
 
 instance ToSchema (UserEmailLinkDTO UserEmailLinkType) where
-  declareNamedSchema = toSwagger forgottenTokenUserEmailLinkDto
+  declareNamedSchema = toSwagger forgottenPasswordUserEmailLinkDto

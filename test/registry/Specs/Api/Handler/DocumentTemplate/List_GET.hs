@@ -19,17 +19,17 @@ import SharedTest.Specs.Api.Common
 import Specs.Common
 
 -- ------------------------------------------------------------------------
--- GET /document-templates
+-- GET /api/document-templates
 -- ------------------------------------------------------------------------
 list_GET :: RequestContext -> SpecWith ((), Application)
-list_GET requestContext = describe "GET /document-templates" $ test_200 requestContext
+list_GET requestContext = describe "GET /api/document-templates" $ test_200 requestContext
 
 -- ----------------------------------------------------
 -- ----------------------------------------------------
 -- ----------------------------------------------------
 reqMethod = methodGet
 
-reqUrl = "/document-templates"
+reqUrl = "/api/document-templates"
 
 reqHeaders = [reqCtHeader]
 
@@ -39,9 +39,9 @@ reqBody = ""
 -- ----------------------------------------------------
 -- ----------------------------------------------------
 test_200 requestContext = do
-  create_test_200 "HTTP 200 OK" requestContext "/document-templates" [wizardDocumentTemplateSimpleDTO]
-  create_test_200 "HTTP 200 OK (metamodelVersion=99.0)" requestContext "/document-templates?metamodelVersion=99.0" [wizardDocumentTemplateSimpleDTO]
-  create_test_200 "HTTP 200 OK (metamodelVersion=10.0)" requestContext "/document-templates?metamodelVersion=10.0" ([] :: [DocumentTemplateSimpleDTO])
+  create_test_200 "HTTP 200 OK" requestContext "/api/document-templates" [wizardDocumentTemplateSimpleDTO]
+  create_test_200 "HTTP 200 OK (metamodelVersion=99.0)" requestContext "/api/document-templates?metamodelVersion=99.0" [wizardDocumentTemplateSimpleDTO]
+  create_test_200 "HTTP 200 OK (metamodelVersion=10.0)" requestContext "/api/document-templates?metamodelVersion=10.0" ([] :: [DocumentTemplateSimpleDTO])
 
 create_test_200 title requestContext reqUrl expDto =
   it title $

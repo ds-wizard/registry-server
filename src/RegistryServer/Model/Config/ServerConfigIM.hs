@@ -13,6 +13,7 @@ instance FromEnv ServerConfig where
     logging <- applyEnv serverConfig.logging
     cloud <- applyEnv serverConfig.cloud
     persistentCommand <- applyEnv serverConfig.persistentCommand
+    userEmailLink <- applyEnv serverConfig.userEmailLink
     return ServerConfig {..}
 
 instance FromEnv ServerConfigGeneral where

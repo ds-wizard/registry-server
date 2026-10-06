@@ -1,6 +1,6 @@
 module RegistryServer.Api.Handler.KnowledgeModelPackage.List_GET where
 
-import Data.Maybe (catMaybes)
+import Data.Maybe (catMaybes, maybeToList)
 import Servant
 
 import RegistryPublic.Api.Resource.Package.KnowledgeModelPackageSimpleDTO
@@ -22,14 +22,13 @@ list_GET
   -> Maybe String
   -> Maybe String
   -> Maybe String
-  -> Maybe String
   -> Maybe Int
   -> ServerContextM (Headers '[Header "x-trace-uuid" String] [KnowledgeModelPackageSimpleDTO])
-list_GET mTokenHeader xUserCountHeaderValue xPkgCountHeaderValue xProjectCountHeaderValue xKnowledgeModelEditorCountHeaderValue xDocCountHeaderValue xTmlCountHeaderValue mOrganizationId mKmId mMetamodelVersion =
+list_GET mTokenHeader xUserCountHeaderValue xPkgCountHeaderValue xProjectCountHeaderValue xKnowledgeModelEditorCountHeaderValue xDocCountHeaderValue xTmlCountHeaderValue mId mMetamodelVersion =
   getMaybeAuthServiceExecutor mTokenHeader $ \runInMaybeAuthService ->
     runInMaybeAuthService Transactional $
       addTraceUuidHeader =<< do
-        let queryParams = catMaybes [(,) "organization_id" <$> mOrganizationId, (,) "km_id" <$> mKmId]
+        let queryParams = maybeToList ((,) "id" <$> mId)
         let headers =
               catMaybes
                 [ (,) xUserCountHeaderName <$> xUserCountHeaderValue

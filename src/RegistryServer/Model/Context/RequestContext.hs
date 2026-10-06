@@ -11,8 +11,8 @@ import Database.PostgreSQL.Simple (Connection)
 import Network.HTTP.Client (Manager)
 import Network.Minio (MinioConn)
 
-import RegistryPublic.Model.Organization.Organization
 import RegistryServer.Model.Config.ServerConfig
+import RegistryServer.Model.User.User
 import Shared.Model.Config.BuildInfoConfig
 import Shared.Model.Error.Error
 import Shared.Model.Sentry.SentryEvent
@@ -26,7 +26,7 @@ data RequestContext = RequestContext
   , httpClientManager :: Manager
   , traceUuid :: U.UUID
   , breadcrumbs :: IORef [SentryBreadcrumb]
-  , currentOrganization :: Maybe Organization
+  , currentUser :: Maybe User
   }
 
 newtype RequestContextM a = RequestContextM {runRequestContextM :: ReaderT RequestContext (LoggingT (ExceptT AppError IO)) a}

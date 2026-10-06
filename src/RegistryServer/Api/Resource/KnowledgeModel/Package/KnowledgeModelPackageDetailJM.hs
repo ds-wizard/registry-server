@@ -2,7 +2,6 @@ module RegistryServer.Api.Resource.KnowledgeModel.Package.KnowledgeModelPackageD
 
 import Data.Aeson
 
-import RegistryPublic.Api.Resource.Organization.OrganizationSimpleJM ()
 import RegistryServer.Api.Resource.KnowledgeModel.Package.KnowledgeModelPackageDetailDTO
 import Shared.Api.Resource.Coordinate.CoordinateJM ()
 import Shared.Api.Resource.KnowledgeModel.Package.KnowledgeModelPackagePhaseJM ()

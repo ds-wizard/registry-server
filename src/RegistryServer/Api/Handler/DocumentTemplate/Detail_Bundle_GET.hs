@@ -20,13 +20,6 @@ type Detail_Bundle_GET =
     :> "bundle"
     :> Get '[OctetStream] (Headers '[Header "x-trace-uuid" String, Header "Content-Disposition" String] FileStreamLazy)
 
-type Templates__Detail_Bundle_GET =
-  Header "Authorization" String
-    :> "templates"
-    :> Capture "coordinate" Coordinate
-    :> "bundle"
-    :> Get '[OctetStream] (Headers '[Header "x-trace-uuid" String, Header "Content-Disposition" String] FileStreamLazy)
-
 detail_bundle_GET
   :: Maybe String
   -> Coordinate
@@ -36,5 +29,5 @@ detail_bundle_GET mTokenHeader documentTemplateId =
     runInAuthService NoTransaction $ do
       zipFile <- exportBundle documentTemplateId
       let cdHeader = "attachment;filename=\"template.zip\""
-      traceUuid <- asks traceUuid
+      traceUuid <- asks (.traceUuid)
       return . addHeader (U.toString traceUuid) . addHeader cdHeader . FileStreamLazy $ zipFile

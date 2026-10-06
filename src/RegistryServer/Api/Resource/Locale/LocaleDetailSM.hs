@@ -2,7 +2,6 @@ module RegistryServer.Api.Resource.Locale.LocaleDetailSM where
 
 import Data.Swagger
 
-import RegistryPublic.Database.Migration.Development.Organization.Data.Organizations
 import RegistryServer.Api.Resource.KnowledgeModel.Package.KnowledgeModelPackageSimpleSM ()
 import RegistryServer.Api.Resource.Locale.LocaleDetailDTO
 import RegistryServer.Api.Resource.Locale.LocaleDetailJM ()
@@ -11,4 +10,4 @@ import Shared.Database.Migration.Development.Locale.Data.Locales
 import Shared.Util.Swagger
 
 instance ToSchema LocaleDetailDTO where
-  declareNamedSchema = toSwagger (toDetailDTO localeNl [] orgGlobal)
+  declareNamedSchema = toSwagger (toDetailDTO localeNl [])

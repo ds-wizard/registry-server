@@ -2,7 +2,6 @@ module RegistryServer.Api.Resource.Locale.LocaleDetailJM where
 
 import Data.Aeson
 
-import RegistryPublic.Api.Resource.Organization.OrganizationSimpleJM ()
 import RegistryServer.Api.Resource.Locale.LocaleDetailDTO
 import Shared.Util.Aeson
 

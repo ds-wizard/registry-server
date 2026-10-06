@@ -1,6 +1,6 @@
 module RegistryServer.Api.Handler.DocumentTemplate.List_GET where
 
-import Data.Maybe (catMaybes)
+import Data.Maybe (maybeToList)
 import Servant
 
 import RegistryPublic.Api.Resource.DocumentTemplate.DocumentTemplateSimpleDTO
@@ -17,12 +17,11 @@ import Shared.Model.Context.TransactionState
 list_GET
   :: Maybe String
   -> Maybe String
-  -> Maybe String
   -> Maybe SemVer2Tuple
   -> ServerContextM (Headers '[Header "x-trace-uuid" String] [DocumentTemplateSimpleDTO])
-list_GET mTokenHeader mOrganizationId mTmlId mMetamodelVersion =
+list_GET mTokenHeader mId mMetamodelVersion =
   getMaybeAuthServiceExecutor mTokenHeader $ \runInMaybeAuthService ->
     runInMaybeAuthService NoTransaction $
       addTraceUuidHeader =<< do
-        let queryParams = catMaybes [(,) "organization_id" <$> mOrganizationId, (,) "template_id" <$> mTmlId]
+        let queryParams = maybeToList ((,) "id" <$> mId)
         getDocumentTemplates queryParams mMetamodelVersion

@@ -1,6 +1,6 @@
 module RegistryServer.Api.Handler.Locale.List_GET where
 
-import Data.Maybe (catMaybes)
+import Data.Maybe (maybeToList)
 import Servant
 
 import RegistryPublic.Api.Resource.Locale.LocaleDTO
@@ -16,11 +16,10 @@ list_GET
   :: Maybe String
   -> Maybe String
   -> Maybe String
-  -> Maybe String
   -> ServerContextM (Headers '[Header "x-trace-uuid" String] [LocaleDTO])
-list_GET mTokenHeader mOrganizationId mLocaleId mRecommendedAppVersion =
+list_GET mTokenHeader mId mRecommendedAppVersion =
   getMaybeAuthServiceExecutor mTokenHeader $ \runInMaybeAuthService ->
     runInMaybeAuthService NoTransaction $
       addTraceUuidHeader =<< do
-        let queryParams = catMaybes [(,) "organization_id" <$> mOrganizationId, (,) "locale_id" <$> mLocaleId]
+        let queryParams = maybeToList ((,) "id" <$> mId)
         getLocales queryParams mRecommendedAppVersion

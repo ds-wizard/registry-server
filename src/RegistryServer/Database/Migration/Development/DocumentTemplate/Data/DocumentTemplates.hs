@@ -1,13 +1,12 @@
 module RegistryServer.Database.Migration.Development.DocumentTemplate.Data.DocumentTemplates where
 
 import RegistryPublic.Api.Resource.DocumentTemplate.DocumentTemplateSimpleDTO
-import RegistryPublic.Database.Migration.Development.Organization.Data.Organizations
 import RegistryServer.Api.Resource.DocumentTemplate.DocumentTemplateDetailDTO
 import RegistryServer.Service.DocumentTemplate.DocumentTemplateMapper
 import Shared.Database.Migration.Development.DocumentTemplate.Data.DocumentTemplates
 
 wizardDocumentTemplateSimpleDTO :: DocumentTemplateSimpleDTO
-wizardDocumentTemplateSimpleDTO = toSimpleDTO [orgGlobal] wizardDocumentTemplate
+wizardDocumentTemplateSimpleDTO = toSimpleDTO wizardDocumentTemplate
 
 wizardDocumentTemplateDetailDTO :: DocumentTemplateDetailDTO
-wizardDocumentTemplateDetailDTO = toDetailDTO wizardDocumentTemplate ["1.0.0"] orgGlobal
+wizardDocumentTemplateDetailDTO = toDetailDTO wizardDocumentTemplate ["1.0.0"]

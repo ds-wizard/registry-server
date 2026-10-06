@@ -2,7 +2,6 @@ module RegistryServer.Api.Resource.DocumentTemplate.DocumentTemplateDetailJM whe
 
 import Data.Aeson
 
-import RegistryPublic.Api.Resource.Organization.OrganizationSimpleJM ()
 import RegistryServer.Api.Resource.DocumentTemplate.DocumentTemplateDetailDTO
 import Shared.Api.Resource.Common.SemVer2TupleJM ()
 import Shared.Util.Aeson

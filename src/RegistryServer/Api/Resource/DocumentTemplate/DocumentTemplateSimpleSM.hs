@@ -4,7 +4,6 @@ import Data.Swagger
 
 import RegistryPublic.Api.Resource.DocumentTemplate.DocumentTemplateSimpleDTO
 import RegistryPublic.Api.Resource.DocumentTemplate.DocumentTemplateSimpleJM ()
-import RegistryPublic.Api.Resource.Organization.OrganizationSimpleSM ()
 import RegistryServer.Database.Migration.Development.DocumentTemplate.Data.DocumentTemplates
 import Shared.Util.Swagger
 

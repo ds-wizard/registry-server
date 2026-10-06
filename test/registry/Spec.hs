@@ -8,8 +8,8 @@ import Data.Pool
 import qualified Data.UUID as U
 import Test.Hspec
 
-import RegistryPublic.Database.Migration.Development.Organization.Data.Organizations
 import RegistryServer.Constant.Resource
+import RegistryServer.Database.Migration.Development.User.Data.Users
 import RegistryServer.Model.Config.ServerConfig
 import RegistryServer.Model.Config.ServerConfigIM ()
 import RegistryServer.Model.Config.ServerConfigJM ()
@@ -23,13 +23,16 @@ import Shared.S3.Common
 import Shared.Service.Config.BuildInfo.BuildInfoConfigService
 import Shared.Service.Config.Server.ServerConfigService
 
-import Specs.Api.Handler.Config.ApiSpec
+import Specs.Api.Handler.ApiKey.ApiSpec
+import Specs.Api.Handler.Bootstrap.ApiSpec
 import Specs.Api.Handler.DocumentTemplate.ApiSpec
 import Specs.Api.Handler.Info.ApiSpec
 import Specs.Api.Handler.KnowledgeModelPackage.ApiSpec
 import Specs.Api.Handler.Locale.ApiSpec
-import Specs.Api.Handler.Organization.ApiSpec
+import Specs.Api.Handler.Token.ApiSpec
+import Specs.Api.Handler.User.ApiSpec
 import Specs.Api.Handler.UserEmailLink.ApiSpec
+import Specs.Database.Migration.Production.Migration_5_0_0.MigrationSpec
 import Specs.Service.KnowledgeModel.Package.PackageValidationSpec
 import TestMigration
 
@@ -74,7 +77,7 @@ prepareWebApp runCallback =
                 , httpClientManager = httpClientManager
                 , traceUuid = fromJust (U.fromString "2ed6eb01-e75e-4c63-9d81-7f36d84192c0")
                 , breadcrumbs = breadcrumbs
-                , currentOrganization = Just orgGlobal
+                , currentUser = Just userAdmin
                 }
         buildSchema requestContext
         runCallback serverContext requestContext
@@ -91,10 +94,16 @@ main =
                 packageValidationSpec
           before (resetDB requestContext) $ describe "INTEGRATION TESTING" $ describe "API" $ do
             userEmailLinkAPI serverContext requestContext
-            configAPI serverContext requestContext
+            apiKeyAPI serverContext requestContext
+            bootstrapAPI serverContext requestContext
             infoAPI serverContext requestContext
             knowledgeModelPackageAPI serverContext requestContext
             localeAPI serverContext requestContext
-            organizationAPI serverContext requestContext
             templateAPI serverContext requestContext
+            tokenAPI serverContext requestContext
+            userAPI serverContext requestContext
+          before (resetDB requestContext) $
+            describe "INTEGRATION TESTING" $
+              describe "MIGRATION" $
+                migration_5_0_0Spec requestContext
     )

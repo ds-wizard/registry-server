@@ -13,6 +13,7 @@ import RegistryServer.S3.DocumentTemplate.DocumentTemplateS3
 import RegistryServer.Service.Audit.AuditService
 import RegistryServer.Service.DocumentTemplate.Bundle.DocumentTemplateBundleAcl
 import RegistryServer.Service.DocumentTemplate.Bundle.DocumentTemplateBundleMapper (toDocumentTemplateArchive)
+import RegistryServer.Service.Publication.PublicationService
 import Shared.Api.Resource.DocumentTemplate.DocumentTemplateDTO
 import Shared.Api.Resource.DocumentTemplateBundle.DocumentTemplateBundleDTO
 import Shared.Database.DAO.DocumentTemplate.DocumentTemplateAssetDAO
@@ -22,6 +23,7 @@ import Shared.Database.DAO.DocumentTemplate.DocumentTemplateFormatDAO
 import Shared.Model.Coordinate.Coordinate
 import Shared.Model.DocumentTemplate.DocumentTemplate
 import Shared.Model.DocumentTemplate.DocumentTemplateSimple
+import Shared.Service.Coordinate.CoordinateValidation
 import Shared.Service.DocumentTemplate.Bundle.DocumentTemplateBundleMapper (fromBundle, fromDocumentTemplateArchive, toBundle)
 import Shared.Service.DocumentTemplate.DocumentTemplateMapper
 import Shared.Service.DocumentTemplate.DocumentTemplateUtil
@@ -42,6 +44,7 @@ importBundle contentS = do
   checkWritePermission
   case fromDocumentTemplateArchive contentS of
     Right (bundle, assetContents) -> do
+      validateIdentifierFormat "id" bundle.id
       uuid <- liftIO generateUuid
       let tenantUuid = U.nil
       let dt = fromBundle bundle uuid tenantUuid Nothing
@@ -54,6 +57,7 @@ importBundle contentS = do
             insertAsset $ fromAssetDTO dt.uuid (fromIntegral . BS.length $ content) tenantUuid dt.createdAt assetDto
         )
         assetContents
+      recordPublication dt.uuid
       return . toSimple $ dt
     Left error -> throwError error
 

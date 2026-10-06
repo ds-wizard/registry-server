@@ -11,9 +11,12 @@ import RegistryServer.S3.Locale.LocaleS3
 import RegistryServer.Service.Audit.AuditService
 import RegistryServer.Service.Locale.Bundle.LocaleBundleAcl
 import RegistryServer.Service.Locale.LocaleMapper
+import RegistryServer.Service.Publication.PublicationService
+import Shared.Api.Resource.LocaleBundle.LocaleBundleDTO
 import Shared.Database.DAO.Locale.LocaleDAO
 import Shared.Model.Coordinate.Coordinate
 import Shared.Model.Locale.Locale
+import Shared.Service.Coordinate.CoordinateValidation
 import Shared.Service.Locale.Bundle.LocaleBundleMapper
 import Shared.Util.Uuid
 
@@ -30,10 +33,12 @@ importBundle contentS = do
   checkWritePermission
   case fromLocaleArchive contentS of
     Right (bundle, wizardTranslation, mailTranslation) -> do
+      validateIdentifierFormat "id" bundle.id
       uuid <- liftIO generateUuid
       let locale = fromLocaleBundle bundle uuid U.nil
       putLocale locale.uuid "wizard.json" wizardTranslation
       putLocale locale.uuid "mail.po" mailTranslation
       insertLocale locale
-      return . toDTO [] $ locale
+      recordPublication locale.uuid
+      return . toDTO $ locale
     Left error -> throwError error
