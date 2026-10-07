@@ -8,6 +8,7 @@ import RegistryServer.Api.Handler.DocumentTemplate.Api
 import RegistryServer.Api.Handler.Info.Api
 import RegistryServer.Api.Handler.KnowledgeModelPackage.Api
 import RegistryServer.Api.Handler.Locale.Api
+import RegistryServer.Api.Handler.MailTemplateLocale.Api
 import RegistryServer.Api.Handler.PersistentCommand.Api
 import RegistryServer.Api.Handler.Token.Api
 import RegistryServer.Api.Handler.User.Api
@@ -21,6 +22,7 @@ type ApplicationAPI =
     :<|> DocumentTemplateAPI
     :<|> KnowledgeModelPackageAPI
     :<|> LocaleAPI
+    :<|> MailTemplateLocaleAPI
     :<|> PersistentCommandAPI
     :<|> TokenAPI
     :<|> UserAPI
@@ -37,6 +39,7 @@ applicationServer =
     :<|> documentTemplateServer
     :<|> knowledgeModelPackageServer
     :<|> localeServer
+    :<|> mailTemplateLocaleServer
     :<|> persistentCommandServer
     :<|> tokenServer
     :<|> userServer

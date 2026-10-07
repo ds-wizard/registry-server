@@ -22,7 +22,6 @@ instance ToRow AuditEntry where
     , toField instanceStatistics.docCount
     , toField (Nothing :: Maybe String)
     , toField (Nothing :: Maybe String)
-    , toField (Nothing :: Maybe String)
     ]
   toRow GetKnowledgeModelBundleAuditEntry {..} =
     [ toStringField "GetKnowledgeModelBundleAuditEntry"
@@ -35,7 +34,6 @@ instance ToRow AuditEntry where
     , toField (Nothing :: Maybe String)
     , toField (Nothing :: Maybe String)
     , toField knowledgeModelPackageReference
-    , toField (Nothing :: Maybe String)
     , toField (Nothing :: Maybe String)
     ]
   toRow GetDocumentTemplateBundleAuditEntry {..} =
@@ -50,21 +48,6 @@ instance ToRow AuditEntry where
     , toField (Nothing :: Maybe String)
     , toField (Nothing :: Maybe String)
     , toField documentTemplateReference
-    , toField (Nothing :: Maybe String)
-    ]
-  toRow GetLocaleBundleAuditEntry {..} =
-    [ toStringField "GetLocaleBundleAuditEntry"
-    , toField userUuid
-    , toField createdAt
-    , toField (Nothing :: Maybe String)
-    , toField (Nothing :: Maybe String)
-    , toField (Nothing :: Maybe String)
-    , toField (Nothing :: Maybe String)
-    , toField (Nothing :: Maybe String)
-    , toField (Nothing :: Maybe String)
-    , toField (Nothing :: Maybe String)
-    , toField (Nothing :: Maybe String)
-    , toField localeReference
     ]
 
 instance FromRow AuditEntry where
@@ -83,7 +66,6 @@ instance FromRow AuditEntry where
         let instanceStatistics = InstanceStatistics {..}
         _ <- field :: RowParser (Maybe String)
         _ <- field :: RowParser (Maybe String)
-        _ <- field :: RowParser (Maybe String)
         return $ ListPackagesAuditEntry {..}
       "GetKnowledgeModelBundleAuditEntry" -> do
         userUuid <- field
@@ -95,7 +77,6 @@ instance FromRow AuditEntry where
         _ <- field :: RowParser (Maybe String)
         _ <- field :: RowParser (Maybe String)
         knowledgeModelPackageReference <- field
-        _ <- field :: RowParser (Maybe String)
         _ <- field :: RowParser (Maybe String)
         return $ GetKnowledgeModelBundleAuditEntry {..}
       "GetDocumentTemplateBundleAuditEntry" -> do
@@ -109,19 +90,5 @@ instance FromRow AuditEntry where
         _ <- field :: RowParser (Maybe String)
         _ <- field :: RowParser (Maybe String)
         documentTemplateReference <- field
-        _ <- field :: RowParser (Maybe String)
         return $ GetDocumentTemplateBundleAuditEntry {..}
-      "GetLocaleBundleAuditEntry" -> do
-        userUuid <- field
-        createdAt <- field
-        _ <- field :: RowParser (Maybe String)
-        _ <- field :: RowParser (Maybe String)
-        _ <- field :: RowParser (Maybe String)
-        _ <- field :: RowParser (Maybe String)
-        _ <- field :: RowParser (Maybe String)
-        _ <- field :: RowParser (Maybe String)
-        _ <- field :: RowParser (Maybe String)
-        _ <- field :: RowParser (Maybe String)
-        localeReference <- field
-        return $ GetLocaleBundleAuditEntry {..}
       _ -> error $ "Unknown AuditEntry type: " ++ aType

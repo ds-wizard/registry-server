@@ -10,6 +10,8 @@ import qualified RegistryServer.Database.Migration.Development.KnowledgeModel.Kn
 import qualified RegistryServer.Database.Migration.Development.KnowledgeModel.KnowledgeModelPackageSchemaMigration as KnowledgeModelPackage
 import qualified RegistryServer.Database.Migration.Development.Locale.LocaleMigration as Locale
 import qualified RegistryServer.Database.Migration.Development.Locale.LocaleSchemaMigration as Locale
+import qualified RegistryServer.Database.Migration.Development.MailTemplateLocale.MailTemplateLocaleMigration as MailTemplateLocale
+import qualified RegistryServer.Database.Migration.Development.MailTemplateLocale.MailTemplateLocaleSchemaMigration as MailTemplateLocale
 import qualified RegistryServer.Database.Migration.Development.PersistentCommand.PersistentCommandSchemaMigration as PersistentCommand
 import qualified RegistryServer.Database.Migration.Development.Publication.PublicationSchemaMigration as Publication
 import qualified RegistryServer.Database.Migration.Development.User.UserMigration as User
@@ -29,6 +31,7 @@ runMigration = runRequestContextWithServerContext $ do
   Component.dropTables
   Publication.dropTables
   Locale.dropTables
+  MailTemplateLocale.dropTables
   PersistentCommand.dropTables
   DocumentTemplate.dropTables
   Audit.dropTables
@@ -47,6 +50,7 @@ runMigration = runRequestContextWithServerContext $ do
   DocumentTemplate.createTables
   PersistentCommand.createTables
   Locale.createTables
+  MailTemplateLocale.createTables
   Component.createTables
   Publication.createTables
   -- 6. Create DB functions
@@ -57,6 +61,10 @@ runMigration = runRequestContextWithServerContext $ do
   DocumentTemplate.runMigration
   PersistentCommand.runMigration
   Locale.runMigration
+  MailTemplateLocale.runMigration
   Component.runMigration
+  -- 8. Load S3 fixtures
+  Locale.runS3Migration
+  MailTemplateLocale.runS3Migration
   logInfo _CMP_MIGRATION "ended"
   return Nothing

@@ -22,11 +22,6 @@ data AuditEntry
       , documentTemplateReference :: String
       , createdAt :: UTCTime
       }
-  | GetLocaleBundleAuditEntry
-      { userUuid :: Maybe U.UUID
-      , localeReference :: String
-      , createdAt :: UTCTime
-      }
   deriving (Show, Generic)
 
 instance Eq AuditEntry where
@@ -39,7 +34,4 @@ instance Eq AuditEntry where
   ae1@GetDocumentTemplateBundleAuditEntry {} == ae2@GetDocumentTemplateBundleAuditEntry {} =
     ae1.userUuid == ae2.userUuid
       && ae1.documentTemplateReference == ae2.documentTemplateReference
-  ae1@GetLocaleBundleAuditEntry {} == ae2@GetLocaleBundleAuditEntry {} =
-    ae1.userUuid == ae2.userUuid
-      && ae1.localeReference == ae2.localeReference
   _ == _ = False

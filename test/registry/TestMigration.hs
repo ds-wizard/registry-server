@@ -3,6 +3,8 @@ module TestMigration where
 import Data.Foldable (traverse_)
 
 import RegistryServer.Database.DAO.Audit.AuditEntryDAO
+import RegistryServer.Database.DAO.Locale.RegistryLocaleDAO
+import RegistryServer.Database.DAO.MailTemplateLocale.RegistryMailTemplateLocaleDAO
 import RegistryServer.Database.DAO.Publication.PublicationDAO
 import RegistryServer.Database.DAO.User.UserDAO
 import RegistryServer.Database.DAO.UserToken.UserTokenDAO
@@ -11,6 +13,7 @@ import qualified RegistryServer.Database.Migration.Development.Common.CommonSche
 import qualified RegistryServer.Database.Migration.Development.DocumentTemplate.DocumentTemplateSchemaMigration as DocumentTemplate
 import qualified RegistryServer.Database.Migration.Development.KnowledgeModel.KnowledgeModelPackageSchemaMigration as KnowledgeModelPackage
 import qualified RegistryServer.Database.Migration.Development.Locale.LocaleSchemaMigration as Locale
+import qualified RegistryServer.Database.Migration.Development.MailTemplateLocale.MailTemplateLocaleSchemaMigration as MailTemplateLocale
 import qualified RegistryServer.Database.Migration.Development.PersistentCommand.PersistentCommandSchemaMigration as PersistentCommand
 import qualified RegistryServer.Database.Migration.Development.Publication.PublicationSchemaMigration as Publication
 import qualified RegistryServer.Database.Migration.Development.User.Data.Users as Users
@@ -19,7 +22,6 @@ import qualified RegistryServer.Database.Migration.Development.UserEmailLink.Use
 import qualified RegistryServer.Database.Migration.Development.UserToken.Data.UserTokens as UserTokens
 import Shared.Database.DAO.Component.ComponentDAO
 import Shared.Database.DAO.DocumentTemplate.DocumentTemplateDAO
-import Shared.Database.DAO.Locale.LocaleDAO
 import Shared.Database.DAO.Package.KnowledgeModelPackageDAO
 import Shared.Database.DAO.Package.KnowledgeModelPackageEventDAO
 import Shared.Database.DAO.PersistentCommand.PersistentCommandDAO
@@ -36,6 +38,7 @@ buildSchema requestContext =
     runInContext Component.dropTables requestContext
     runInContext Publication.dropTables requestContext
     runInContext Locale.dropTables requestContext
+    runInContext MailTemplateLocale.dropTables requestContext
     runInContext PersistentCommand.dropTables requestContext
     runInContext UserEmailLink.dropTables requestContext
     runInContext Audit.dropTables requestContext
@@ -55,6 +58,7 @@ buildSchema requestContext =
     runInContext DocumentTemplate.createTables requestContext
     runInContext PersistentCommand.createTables requestContext
     runInContext Locale.createTables requestContext
+    runInContext MailTemplateLocale.createTables requestContext
     runInContext Component.createTables requestContext
     runInContext Publication.createTables requestContext
 
@@ -64,7 +68,8 @@ resetDB requestContext = do
   runInContext deleteAuditEntries requestContext
   runInContext deletePackages requestContext
   runInContext deleteDocumentTemplates requestContext
-  runInContext deleteLocales requestContext
+  runInContext deleteRegistryLocales requestContext
+  runInContext deleteRegistryMailTemplateLocales requestContext
   runInContext deletePublications requestContext
   runInContext deleteUsers requestContext
   runInContext deleteComponents requestContext

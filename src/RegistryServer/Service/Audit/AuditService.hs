@@ -2,7 +2,6 @@ module RegistryServer.Service.Audit.AuditService (
   auditListPackages,
   auditGetKnowledgeModelBundle,
   auditGetDocumentTemplateBundle,
-  auditGetLocaleBundle,
 ) where
 
 import Control.Monad.Reader (asks, liftIO)
@@ -43,14 +42,6 @@ auditGetDocumentTemplateBundle coordinate =
   heGetUserFromContext $ \user -> do
     now <- liftIO getCurrentTime
     let entry = GetDocumentTemplateBundleAuditEntry {userUuid = Just user.uuid, documentTemplateReference = show coordinate, createdAt = now}
-    insertAuditEntry entry
-    return . Right . Just $ entry
-
-auditGetLocaleBundle :: Coordinate -> RequestContextM (Either AppError (Maybe AuditEntry))
-auditGetLocaleBundle coordinate =
-  heGetUserFromContext $ \user -> do
-    now <- liftIO getCurrentTime
-    let entry = GetLocaleBundleAuditEntry {userUuid = Just user.uuid, localeReference = show coordinate, createdAt = now}
     insertAuditEntry entry
     return . Right . Just $ entry
 

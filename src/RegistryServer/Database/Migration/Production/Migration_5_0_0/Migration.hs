@@ -2,6 +2,7 @@ module RegistryServer.Database.Migration.Production.Migration_5_0_0.Migration (
   definition,
   assertNoDuplicateEmails,
   migrateOrganizations,
+  replaceLocales,
 ) where
 
 import Control.Monad.Logger
@@ -20,18 +21,17 @@ import Shared.Util.Uuid
 
 definition = (meta, migrate)
 
-meta = MigrationMeta {mmNumber = 5000000, mmName = "Workspace column", mmDescription = "Add the workspace column the shared package and template rows carry, replace organization id by a single id and replace organizations by accounts"}
+meta = MigrationMeta {mmNumber = 5000000, mmName = "Workspace column", mmDescription = "Add the workspace column the shared package and template rows carry, replace organization id by a single id, replace organizations by accounts and replace locale bundles by PO-based locales"}
 
 migrate :: Pool Connection -> LoggingT IO (Maybe Error)
 migrate dbPool = do
   assertNoDuplicateIds dbPool "knowledge_model_package" "km_id"
   assertNoDuplicateIds dbPool "document_template" "template_id"
-  assertNoDuplicateIds dbPool "locale" "locale_id"
   assertNoDuplicateEmails dbPool
   addWorkspaceColumn dbPool
   replaceKnowledgeModelPackageOrganizationId dbPool
   replaceDocumentTemplateOrganizationId dbPool
-  replaceLocaleOrganizationId dbPool
+  replaceLocales dbPool
   createUserTables dbPool
   migrateOrganizations dbPool
   createUserEmailIndex dbPool
@@ -95,15 +95,29 @@ replaceDocumentTemplateOrganizationId dbPool =
     \ALTER TABLE document_template RENAME COLUMN template_id TO id; \
     \CREATE INDEX document_template_id_index ON document_template (id);"
 
-replaceLocaleOrganizationId :: Pool Connection -> LoggingT IO ()
-replaceLocaleOrganizationId dbPool =
+replaceLocales :: Pool Connection -> LoggingT IO ()
+replaceLocales dbPool =
   runSql
     dbPool
-    "UPDATE locale SET locale_id = concat(organization_id, '.', locale_id); \
-    \DROP INDEX IF EXISTS locale_organization_id_locale_id_version_uindex; \
-    \ALTER TABLE locale DROP COLUMN organization_id; \
-    \ALTER TABLE locale RENAME COLUMN locale_id TO id; \
-    \CREATE UNIQUE INDEX locale_id_version_uindex ON locale (id, version);"
+    "DROP TABLE locale; \
+    \CREATE TABLE locale ( \
+    \    uuid uuid NOT NULL, \
+    \    code character varying NOT NULL, \
+    \    name character varying NOT NULL, \
+    \    version character varying NOT NULL, \
+    \    created_at timestamp with time zone NOT NULL, \
+    \    CONSTRAINT locale_pk PRIMARY KEY (uuid), \
+    \    CONSTRAINT locale_code_version_key UNIQUE (code, version) \
+    \); \
+    \CREATE TABLE mail_template_locale ( \
+    \    uuid uuid NOT NULL, \
+    \    code character varying NOT NULL, \
+    \    name character varying NOT NULL, \
+    \    version character varying NOT NULL, \
+    \    created_at timestamp with time zone NOT NULL, \
+    \    CONSTRAINT mail_template_locale_pk PRIMARY KEY (uuid), \
+    \    CONSTRAINT mail_template_locale_code_version_key UNIQUE (code, version) \
+    \);"
 
 createUserTables :: Pool Connection -> LoggingT IO ()
 createUserTables dbPool =
@@ -194,7 +208,8 @@ renameAuditReferences dbPool =
     dbPool
     "ALTER TABLE audit RENAME COLUMN knowledge_model_package_id TO knowledge_model_package_reference; \
     \ALTER TABLE audit RENAME COLUMN document_template_id TO document_template_reference; \
-    \ALTER TABLE audit RENAME COLUMN locale_id TO locale_reference;"
+    \DELETE FROM audit WHERE type = 'GetLocaleBundleAuditEntry'; \
+    \ALTER TABLE audit DROP COLUMN locale_id;"
 
 createPublicationTable :: Pool Connection -> LoggingT IO ()
 createPublicationTable dbPool =

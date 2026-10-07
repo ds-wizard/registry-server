@@ -49,6 +49,7 @@ toMailCommand template email parameters =
     { mode = "registry"
     , template = template
     , recipients = [MC.MailRecipient {uuid = Nothing, email = email}]
+    , sendAsOne = False
     , parameters = M.fromList parameters
     }
 

@@ -29,11 +29,13 @@ import Specs.Api.Handler.DocumentTemplate.ApiSpec
 import Specs.Api.Handler.Info.ApiSpec
 import Specs.Api.Handler.KnowledgeModelPackage.ApiSpec
 import Specs.Api.Handler.Locale.ApiSpec
+import Specs.Api.Handler.MailTemplateLocale.ApiSpec
 import Specs.Api.Handler.Token.ApiSpec
 import Specs.Api.Handler.User.ApiSpec
 import Specs.Api.Handler.UserEmailLink.ApiSpec
 import Specs.Database.Migration.Production.Migration_5_0_0.MigrationSpec
 import Specs.Service.KnowledgeModel.Package.PackageValidationSpec
+import Specs.Service.Locale.Common.LocaleOfferUtilSpec
 import TestMigration
 
 hLoadConfig fileName loadFn callback = do
@@ -92,6 +94,7 @@ main =
               describe
                 "Package"
                 packageValidationSpec
+            describe "Locale" localeOfferUtilSpec
           before (resetDB requestContext) $ describe "INTEGRATION TESTING" $ describe "API" $ do
             userEmailLinkAPI serverContext requestContext
             apiKeyAPI serverContext requestContext
@@ -99,6 +102,7 @@ main =
             infoAPI serverContext requestContext
             knowledgeModelPackageAPI serverContext requestContext
             localeAPI serverContext requestContext
+            mailTemplateLocaleAPI serverContext requestContext
             templateAPI serverContext requestContext
             tokenAPI serverContext requestContext
             userAPI serverContext requestContext

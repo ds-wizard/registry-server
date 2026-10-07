@@ -1,0 +1,9 @@
+module RegistryServer.Database.Mapping.MailTemplateLocale.RegistryMailTemplateLocale where
+
+import Database.PostgreSQL.Simple
+
+import RegistryServer.Model.MailTemplateLocale.RegistryMailTemplateLocale
+
+instance ToRow RegistryMailTemplateLocale
+
+instance FromRow RegistryMailTemplateLocale

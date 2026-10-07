@@ -92,6 +92,12 @@ reqStatisticsHeader =
   , (CI.mk . BS.pack $ xTmlCountHeaderName, BS.pack . show $ iStat.tmlCount)
   ]
 
+localeDisabledServerContext :: ServerContext -> ServerContext
+localeDisabledServerContext serverContext =
+  let config = serverContext.serverConfig
+      general = config.general {localeEnabled = False} :: ServerConfigGeneral
+   in serverContext {serverConfig = (config {general = general}) :: ServerConfig} :: ServerContext
+
 -- ----------------------------------------------------
 -- TESTS
 -- ----------------------------------------------------
@@ -108,6 +114,21 @@ createInvalidJsonTest reqMethod reqUrl missingField =
     let responseMatcher =
           ResponseMatcher {matchHeaders = expHeaders, matchStatus = expStatus, matchBody = bodyContainsInvalidJsonMessage}
     response `shouldRespondWith` responseMatcher
+
+createFeatureDisabledTest reqMethod reqUrl reqHeaders reqBody feature =
+  it "HTTP 400 BAD REQUEST when the feature is disabled" $
+    -- GIVEN: Prepare expectation
+    do
+      let expStatus = 400
+      let expHeaders = resCtHeader : resCorsHeaders
+      let expDto = UserError (_ERROR_SERVICE_COMMON__FEATURE_IS_DISABLED feature)
+      let expBody = encode expDto
+      -- WHEN: Call API
+      response <- request reqMethod reqUrl reqHeaders reqBody
+      -- THEN: Compare response with expectation
+      let responseMatcher =
+            ResponseMatcher {matchHeaders = expHeaders, matchStatus = expStatus, matchBody = bodyEquals expBody}
+      response `shouldRespondWith` responseMatcher
 
 createForbiddenTest reqMethod reqUrl reqHeaders reqBody forbiddenReason =
   it "HTTP 403 FORBIDDEN" $

@@ -31,8 +31,7 @@ createTables = do
         \    document_template_count        int, \
         \    document_count                 int, \
         \    knowledge_model_package_reference varchar, \
-        \    document_template_reference       varchar, \
-        \    locale_reference                  varchar \
+        \    document_template_reference       varchar \
         \);"
   let action conn = execute_ conn sql
   runDB action
