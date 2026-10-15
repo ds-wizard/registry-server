@@ -138,6 +138,7 @@ executables:
   registry-server:
     main: Main.hs
     source-dirs: app/registry-server
+    ghc-options: -rtsopts "-with-rtsopts=-maxN4 -A64m -qg --nonmoving-gc"
     when: *default-ghc-options
     dependencies:
     - base
