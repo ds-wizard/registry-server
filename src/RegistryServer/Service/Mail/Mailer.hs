@@ -14,6 +14,7 @@ import RegistryServer.Database.DAO.Common
 import RegistryServer.Model.Config.ServerConfig
 import RegistryServer.Model.Context.RequestContext
 import RegistryServer.Model.User.User
+import Shared.Constant.PersistentCommand
 import Shared.Database.DAO.PersistentCommand.PersistentCommandDAO
 import Shared.Model.Config.ServerConfig
 import qualified Shared.Model.PersistentCommand.Mail.MailCommand as MC
@@ -68,6 +69,6 @@ sendEmail dto user = do
     uuid <- liftIO generateUuid
     now <- liftIO getCurrentTime
     let body = encodeJsonToString dto
-    let command = toPersistentCommand uuid "mailer" "sendMail" body 10 U.nil (Just . U.toString $ user.uuid) now
+    let command = toPersistentCommand uuid mailerComponent "sendMail" body 10 U.nil (Just . U.toString $ user.uuid) now
     insertPersistentCommand command
     return ()
