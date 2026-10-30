@@ -9,10 +9,6 @@ database:
 s3:
   bucket: registry-server
 
-analyticalMails:
-  enabled: false
-  email:
-
 sentry:
   enabled: false
   dsn:

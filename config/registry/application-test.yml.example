@@ -11,6 +11,3 @@ s3:
   url: http://localhost:9000
   bucket: registry-server
 
-analyticalMails:
-  enabled: false
-  email:

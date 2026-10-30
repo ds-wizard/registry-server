@@ -1,6 +1,5 @@
 module RegistryServer.Service.Mail.Mailer (
   sendRegistrationConfirmationMail,
-  sendRegistrationCreatedAnalyticsMail,
   sendResetPasswordMail,
 ) where
 
@@ -16,7 +15,6 @@ import RegistryServer.Model.Context.RequestContext
 import RegistryServer.Model.User.User
 import Shared.Constant.PersistentCommand
 import Shared.Database.DAO.PersistentCommand.PersistentCommandDAO
-import Shared.Model.Config.ServerConfig
 import qualified Shared.Model.PersistentCommand.Mail.MailCommand as MC
 import Shared.Service.PersistentCommand.PersistentCommandMapper
 import qualified Shared.Util.Aeson as A
@@ -28,12 +26,6 @@ sendRegistrationConfirmationMail user hash = do
   serverConfig <- asks (.serverConfig)
   let parameters = userParameters user serverConfig ++ [("hash", A.string hash)]
   sendEmail (toMailCommand "registrationConfirmation" user.email parameters) user
-
-sendRegistrationCreatedAnalyticsMail :: User -> RequestContextM ()
-sendRegistrationCreatedAnalyticsMail user = do
-  serverConfig <- asks (.serverConfig)
-  let parameters = userParameters user serverConfig
-  sendEmail (toMailCommand "registrationCreatedAnalytics" serverConfig.analyticalMails.email parameters) user
 
 sendResetPasswordMail :: User -> String -> RequestContextM ()
 sendResetPasswordMail user hash = do

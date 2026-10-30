@@ -8,12 +8,11 @@ data ServerConfig = ServerConfig
   { general :: ServerConfigGeneral
   , database :: ServerConfigDatabase
   , s3 :: ServerConfigS3
-  , analyticalMails :: ServerConfigAnalyticalMails
   , sentry :: ServerConfigSentry
   , logging :: ServerConfigLogging
   , persistentCommand :: ServerConfigPersistentCommand
   , userEmailLink :: ServerConfigUserEmailLink
-  , cloud :: ServerConfigCloud
+  , multiTenancy :: ServerConfigMultiTenancy
   }
   deriving (Generic, Show)
 

@@ -2,7 +2,7 @@ module RegistryServer.Service.User.UserService where
 
 import Control.Monad (void, when)
 import Control.Monad.Except (catchError, throwError)
-import Control.Monad.Reader (asks, liftIO)
+import Control.Monad.Reader (liftIO)
 import Data.Maybe (fromMaybe)
 import Data.Time
 import qualified Data.UUID as U
@@ -28,7 +28,6 @@ import Shared.Database.DAO.UserEmailLink.UserEmailLinkDAO
 import Shared.Model.Common.Page
 import Shared.Model.Common.Pageable
 import Shared.Model.Common.Sort
-import Shared.Model.Config.ServerConfig
 import Shared.Model.Error.Error
 import Shared.Model.UserEmailLink.UserEmailLink
 import Shared.Util.Password
@@ -83,7 +82,6 @@ createUser reqDto uUuid uPasswordHash shouldSendRegistrationEmail =
           (sendRegistrationConfirmationMail user userEmailLink.hash)
           (\_ -> throwError $ GeneralServerError _ERROR_SERVICE_USER__ACTIVATION_EMAIL_NOT_SENT)
       )
-    sendAnalyticsEmailIfEnabled user
     return $ toDTO user
 
 getUserDetailById :: U.UUID -> RequestContextM UserDTO
@@ -146,11 +144,6 @@ deleteUser userUuid =
 -- --------------------------------
 -- PRIVATE
 -- --------------------------------
-sendAnalyticsEmailIfEnabled :: User -> RequestContextM ()
-sendAnalyticsEmailIfEnabled user = do
-  serverConfig <- asks (.serverConfig)
-  when serverConfig.analyticalMails.enabled (sendRegistrationCreatedAnalyticsMail user)
-
 checkIfRegistrationIsEnabled :: RequestContextM ()
 checkIfRegistrationIsEnabled = checkIfServerFeatureIsEnabled "Registration" (\s -> s.general.publicRegistrationEnabled)
 

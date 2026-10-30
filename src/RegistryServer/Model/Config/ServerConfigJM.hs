@@ -14,9 +14,8 @@ instance FromJSON ServerConfig where
     database <- o .:? "database" .!= defaultDatabase
     s3 <- o .:? "s3" .!= defaultS3
     sentry <- o .:? "sentry" .!= defaultSentry
-    analyticalMails <- o .:? "analyticalMails" .!= defaultAnalyticalMails
     logging <- o .:? "logging" .!= defaultLogging
-    cloud <- o .:? "cloud" .!= defaultCloud
+    multiTenancy <- o .:? "multiTenancy" .!= defaultMultiTenancy
     persistentCommand <- o .:? "persistentCommand" .!= defaultPersistentCommand
     userEmailLink <- o .:? "userEmailLink" .!= defaultUserEmailLink
     return ServerConfig {..}

@@ -9,9 +9,8 @@ instance FromEnv ServerConfig where
     database <- applyEnv serverConfig.database
     s3 <- applyEnv serverConfig.s3
     sentry <- applyEnv serverConfig.sentry
-    analyticalMails <- applyEnv serverConfig.analyticalMails
     logging <- applyEnv serverConfig.logging
-    cloud <- applyEnv serverConfig.cloud
+    multiTenancy <- applyEnv serverConfig.multiTenancy
     persistentCommand <- applyEnv serverConfig.persistentCommand
     userEmailLink <- applyEnv serverConfig.userEmailLink
     return ServerConfig {..}
